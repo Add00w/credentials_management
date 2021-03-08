@@ -87,7 +87,7 @@
     },
     {
       "name": "flutter_bloc",
-      "rootUri": "file:///Users/addow/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_bloc-7.0.0-nullsafety.3",
+      "rootUri": "file:///Users/addow/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_bloc-7.0.0-nullsafety.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -231,7 +231,7 @@
     },
     {
       "name": "provider",
-      "rootUri": "file:///Users/addow/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/provider-5.0.0-nullsafety.5",
+      "rootUri": "file:///Users/addow/Developer/flutter/.pub-cache/hosted/pub.dartlang.org/provider-5.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -308,7 +308,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2021-03-08T07:31:33.582595Z",
+  "generated": "2021-03-08T08:32:30.797953Z",
   "generator": "pub",
   "generatorVersion": "2.12.0"
 }
