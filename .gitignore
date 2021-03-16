@@ -55,7 +55,6 @@ analysis_benchmark.json
 .pub-cache/
 .pub/
 /build/
-.flutter-plugins-dependencies
 # config folder
 /assets/config/
 
@@ -114,9 +113,4 @@ app.*.map.json
 !/dev/ci/**/Gemfile.lock
 .vscode/
 
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
 .flutter-plugins-dependencies

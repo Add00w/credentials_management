@@ -1,95 +1,280 @@
-import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
-import 'package:credentials_management/src/models/credentials.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedDestination = 0;
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  bool isCollapsed = true;
+  late double screenWidth, screenHeight;
+  final Duration duration = const Duration(milliseconds: 500);
+  late AnimationController _controller;
 
-  late List<Credentials> _credentials;
+  AppBar appBar = AppBar();
+  double borderRadius = 0.0;
+
+  int _navBarIndex = 0;
+  late TabController tabController;
+
   @override
   void initState() {
     super.initState();
-    _credentials = [];
+    _controller = AnimationController(vsync: this, duration: duration);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    tabController = TabController(length: 4, vsync: this);
+    tabController.addListener(() {
+      setState(() {
+        _navBarIndex = tabController.index;
+      });
+    });
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
+    Size size = MediaQuery.of(context).size;
+    screenHeight = size.height;
+    screenWidth = size.width;
 
-    return Scaffold(
-      drawer: Drawer(
-        child: ListView(
+    return WillPopScope(
+      onWillPop: () async {
+        if (!isCollapsed) {
+          setState(() {
+            _controller.reverse();
+            borderRadius = 0.0;
+            isCollapsed = !isCollapsed;
+          });
+          return false;
+        } else
+          return true;
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Stack(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Addow',
-                style: textTheme.headline6,
-              ),
-            ),
-            const Divider(
-              height: 1,
-              thickness: 1,
-            ),
-            ListTile(
-              leading: const Icon(Icons.remove_red_eye_outlined),
-              title: const Text('Credentials'),
-              selected: _selectedDestination == 0,
-              onTap: () => selectDestination(0),
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              selected: _selectedDestination == 1,
-              onTap: () => selectDestination(1),
-            ),
-            ListTile(
-              leading: const Icon(Icons.info_outlined),
-              title: const Text('About'),
-              selected: _selectedDestination == 2,
-              onTap: () => selectDestination(2),
-            ),
-            const Divider(
-              height: 1,
-              thickness: 1,
-            ),
-            ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: const Text('Logout'),
-              selected: _selectedDestination == 3,
-              onTap: () => _logout(context),
+            menu(context),
+            backgroundWidget(context),
+            AnimatedPositioned(
+              left: isCollapsed ? 0 : 0.6 * screenWidth,
+              right: isCollapsed ? 0 : -0.2 * screenWidth,
+              top: isCollapsed ? 0 : screenHeight * 0.1,
+              bottom: isCollapsed ? 0 : screenHeight * 0.1,
+              duration: duration,
+              curve: Curves.fastOutSlowIn,
+              child: dashboard(context),
             ),
           ],
         ),
       ),
-      appBar: AppBar(
-        title: const Text('Passwords'),
-      ),
-      body: ListView.builder(
-          itemCount: 5 /*_credentials.length*/,
-          itemBuilder: (context, index) {
-            return const ListTile(
-              leading: Icon(Icons.g_translate),
-              title: Text('Google'),
-            );
-          }),
     );
   }
 
-  void _logout(BuildContext context) {
-    context.read<AuthenticationBloc>().add(LoggedOut());
+  Widget menu(context) {
+    return SafeArea(
+      child: Container(
+        color: Color(0xff2b2d42),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 32.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: 0.6,
+              heightFactor: 0.8,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    horizontalTitleGap: 0.0,
+                    leading: Icon(Icons.home),
+                    title: Text(
+                      'Home',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    horizontalTitleGap: 0.0,
+                    leading: Icon(Icons.security),
+                    title: Text(
+                      'Credentials',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    horizontalTitleGap: 0.0,
+                    leading: Icon(Icons.contact_mail),
+                    title: Text(
+                      'Contact Us',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    horizontalTitleGap: 0.0,
+                    leading: Icon(Icons.info),
+                    title: Text(
+                      'About',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
-  void selectDestination(int index) {
-    setState(() {
-      _selectedDestination = index;
-    });
+  Widget dashboard(context) {
+    return SafeArea(
+      child: Material(
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        type: MaterialType.card,
+        animationDuration: duration,
+        color: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 8,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text('Dashboard'),
+              leading: IconButton(
+                  icon: AnimatedIcon(
+                    icon: AnimatedIcons.menu_close,
+                    progress: _controller,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      if (isCollapsed) {
+                        _controller.forward();
+
+                        borderRadius = 16.0;
+                      } else {
+                        _controller.reverse();
+
+                        borderRadius = 0.0;
+                      }
+
+                      isCollapsed = !isCollapsed;
+                    });
+                  }),
+            ),
+            bottomNavigationBar: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                  bottomLeft: Radius.circular(borderRadius),
+                  bottomRight: Radius.circular(borderRadius)),
+              child: BottomNavigationBar(
+                  currentIndex: _navBarIndex,
+                  type: BottomNavigationBarType.shifting,
+                  onTap: (index) {
+                    setState(() {
+                      _navBarIndex = index;
+                    });
+                  },
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.dashboard),
+                      label: '.',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.explore),
+                      label: '.',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.notifications),
+                      label: '.',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.account_circle),
+                      label: '.',
+                    ),
+                  ]),
+            ),
+            body: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: ClampingScrollPhysics(),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 50),
+                    Container(
+                      height: 200,
+                      child: PageView(
+                        controller: PageController(viewportFraction: 0.8),
+                        scrollDirection: Axis.horizontal,
+                        pageSnapping: true,
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            color: Colors.redAccent,
+                            width: 100,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            color: Colors.blueAccent,
+                            width: 100,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            color: Colors.greenAccent,
+                            width: 100,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget backgroundWidget(BuildContext context) {
+    return AnimatedPositioned(
+      left: isCollapsed ? 0 : 0.57 * screenWidth,
+      right: isCollapsed ? 0 : -0.2 * screenWidth,
+      top: isCollapsed ? 0 : screenHeight * 0.1,
+      bottom: isCollapsed ? 0 : screenHeight * 0.1,
+      duration: duration,
+      curve: Curves.fastOutSlowIn,
+      child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(isCollapsed ? 10 : 65),
+            color: Theme.of(context).backgroundColor,
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [],
+              )
+            ],
+          )),
+    );
   }
 }

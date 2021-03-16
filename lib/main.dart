@@ -7,6 +7,7 @@ import 'package:credentials_management/src/ui/screens/home_screen.dart';
 import 'package:credentials_management/src/ui/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // class SimpleBlocDelegate extends BlocObserver {
 //   @override
@@ -47,7 +48,11 @@ class CredentialsManagementApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Credentials management app.',
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Color.fromRGBO(32, 33, 36, 1.0),
+        primaryColor: Color.fromRGBO(48, 49, 52, 1.0),
+      ),
       home: BlocBuilder<AuthenticationBloc, AuthState>(
           builder: (context, state) => state is Authenticated
               ? HomeScreen()
