@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class Credentials {
   final String brandName;
   final String? userName;

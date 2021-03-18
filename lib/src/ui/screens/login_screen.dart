@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _fingerprint() async {
     final localAuth = LocalAuthentication();
-    final bool didAuthenticate = await localAuth.authenticateWithBiometrics(
+    final bool didAuthenticate = await localAuth.authenticate(
       localizedReason: 'Please authenticate to show account balance',
     );
     log(didAuthenticate.toString());

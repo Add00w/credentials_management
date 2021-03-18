@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
 import 'package:credentials_management/src/blocs/login/login_bloc.dart';
 import 'package:credentials_management/src/services/repositories/user_repository.dart';
-import 'package:credentials_management/src/ui/screens/home_screen.dart';
 import 'package:credentials_management/src/ui/screens/login_screen.dart';
+import 'package:credentials_management/src/ui/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,7 +55,7 @@ class CredentialsManagementApp extends StatelessWidget {
       ),
       home: BlocBuilder<AuthenticationBloc, AuthState>(
           builder: (context, state) => state is Authenticated
-              ? HomeScreen()
+              ? MainScreen()
               : BlocProvider<LoginBloc>(
                   create: (context) => LoginBloc(
                     authenticationBloc: context.read<AuthenticationBloc>(),
