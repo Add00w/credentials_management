@@ -52,6 +52,7 @@ class CredentialsManagementApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Color.fromRGBO(32, 33, 36, 1.0),
         primaryColor: Color.fromRGBO(48, 49, 52, 1.0),
+        appBarTheme: AppBarTheme(centerTitle: true),
       ),
       home: BlocBuilder<AuthenticationBloc, AuthState>(
           builder: (context, state) => state is Authenticated

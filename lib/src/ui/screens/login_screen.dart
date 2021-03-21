@@ -106,14 +106,14 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width / 2.3,
                   color: Colors.grey,
                   height: 1.5,
                   margin: const EdgeInsets.only(right: 5),
                 ),
                 Text('or', style: Theme.of(context).textTheme.caption),
                 Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width / 2.3,
                   color: Colors.grey,
                   height: 1.5,
                   margin: const EdgeInsets.only(left: 5),

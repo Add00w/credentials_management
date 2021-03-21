@@ -1,8 +1,14 @@
+import 'package:credentials_management/src/blocs/shared/main_screen_cubit.dart';
 import 'package:credentials_management/src/ui/screens/about_screen.dart';
 import 'package:credentials_management/src/ui/screens/contact_screen.dart';
+import 'package:credentials_management/src/ui/screens/credentials/create_credentials_screen.dart';
 import 'package:credentials_management/src/ui/screens/credentials/credentials_screen.dart';
 import 'package:credentials_management/src/ui/screens/home_screen.dart';
+import 'package:credentials_management/src/ui/screens/profile_screen.dart';
+import 'package:credentials_management/src/ui/screens/settings_screen.dart';
+import 'package:credentials_management/src/ui/widgets/credentials_drawer_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -21,7 +27,6 @@ class _MainScreenState extends State<MainScreen>
 
   int _navBarIndex = 0;
   late TabController tabController;
-  int _screenIdex = 0;
 
   @override
   void initState() {
@@ -32,7 +37,7 @@ class _MainScreenState extends State<MainScreen>
   @override
   void dispose() {
     _controller.dispose();
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     tabController.addListener(() {
       setState(() {
         _navBarIndex = tabController.index;
@@ -41,14 +46,10 @@ class _MainScreenState extends State<MainScreen>
     super.dispose();
   }
 
+  List<Widget> _screens = const [];
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> _screens = const [
-      HomeScreen(),
-      CredentialsScreen(),
-      ContactUsScreen(),
-      AboutScreen()
-    ];
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
@@ -65,22 +66,58 @@ class _MainScreenState extends State<MainScreen>
         } else
           return true;
       },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: Stack(
-          children: <Widget>[
-            menu(context),
-            backgroundWidget(context),
-            AnimatedPositioned(
-              left: isCollapsed ? 0 : 0.6 * screenWidth,
-              right: isCollapsed ? 0 : -0.2 * screenWidth,
-              top: isCollapsed ? 0 : screenHeight * 0.1,
-              bottom: isCollapsed ? 0 : screenHeight * 0.1,
-              duration: duration,
-              curve: Curves.fastOutSlowIn,
-              child: home(),
+      child: BlocProvider<MainScreenCubit>(
+        create: (context) => MainScreenCubit(),
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          resizeToAvoidBottomInset: false,
+          body:Stack(
+              children: <Widget>[
+                menu(context),
+                AnimatedPositioned(
+                  left: isCollapsed ? 0 : 0.6 * screenWidth,
+                  right: isCollapsed ? 0 : -0.2 * screenWidth,
+                  top: isCollapsed ? 0 : screenHeight * 0.1,
+                  bottom: isCollapsed ? 0 : screenHeight * 0.1,
+                  duration: duration,
+                  curve: Curves.fastOutSlowIn,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: BlocBuilder<MainScreenCubit, int>(
+                            builder: (context, index) {
+                          return Stack(
+                            children: [
+                              IndexedStack(
+                                index: index,
+                                children: [
+                                  HomeScreen(),
+                                  CredentialsScreen(),
+                                  ContactUsScreen(),
+                                  AboutScreen(),
+                                  SettingsScreen(),
+                                  CreateCredentialsScreen(),
+                                  ProfileScreen(),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 28.0),
+                                child: drawerIcon(),
+                              ),
+                            ],
+                          );
+                        }),
+                      ),
+                      // bottomNavBar(context),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+
+          bottomNavigationBar: bottomNavBar(context),
+
         ),
       ),
     );
@@ -97,172 +134,52 @@ class _MainScreenState extends State<MainScreen>
             child: FractionallySizedBox(
               widthFactor: 0.6,
               heightFactor: 0.8,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    horizontalTitleGap: 0.0,
-                    leading: Icon(Icons.home),
-                    title: Text(
-                      'Home',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    horizontalTitleGap: 0.0,
-                    leading: Icon(Icons.security),
-                    title: Text(
-                      'Credentials',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    horizontalTitleGap: 0.0,
-                    leading: Icon(Icons.contact_mail),
-                    title: Text(
-                      'Contact Us',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    horizontalTitleGap: 0.0,
-                    leading: Icon(Icons.info),
-                    title: Text(
-                      'About',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget home() {
-    return SafeArea(
-      child: Material(
-        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-        type: MaterialType.card,
-        animationDuration: duration,
-        color: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 8,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-          child: Scaffold(
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {},
-              child: Icon(Icons.exit_to_app),
-            ),
-            appBar: AppBar(
-              title: Text('Dashboard'),
-              leading: IconButton(
-                  icon: AnimatedIcon(
-                    icon: AnimatedIcons.menu_close,
-                    progress: _controller,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (isCollapsed) {
-                        _controller.forward();
-
-                        borderRadius = 16.0;
-                      } else {
-                        _controller.reverse();
-
-                        borderRadius = 0.0;
-                      }
-
-                      isCollapsed = !isCollapsed;
-                    });
-                  }),
-            ),
-            bottomNavigationBar: ClipRRect(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
-                  bottomLeft: Radius.circular(borderRadius),
-                  bottomRight: Radius.circular(borderRadius)),
-              child: BottomNavigationBar(
-                  currentIndex: _navBarIndex,
-                  type: BottomNavigationBarType.shifting,
-                  onTap: (index) {
-                    setState(() {
-                      _navBarIndex = index;
-                    });
-                  },
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.dashboard),
-                      label: '.',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.explore),
-                      label: '.',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.notifications),
-                      label: '.',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.account_circle),
-                      label: '.',
-                    ),
-                  ]),
-            ),
-            body: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: ClampingScrollPhysics(),
-              child: Container(
-                child: Column(
+              child:
+                  BlocBuilder<MainScreenCubit, int>(builder: (context, index) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 50),
-                    Container(
-                      height: 200,
-                      child: PageView(
-                        controller: PageController(viewportFraction: 0.8),
-                        scrollDirection: Axis.horizontal,
-                        pageSnapping: true,
-                        children: <Widget>[
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            color: Colors.redAccent,
-                            width: 100,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            color: Colors.blueAccent,
-                            width: 100,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            color: Colors.greenAccent,
-                            width: 100,
-                          ),
-                        ],
-                      ),
+                    CredentialsDrawerItem(
+                      selected: index == 0,
+                      title: 'home',
+                      icon: Icons.home,
+                      onTap: () {
+                        context.read<MainScreenCubit>().onChangeDrawerTab(0);
+                        Navigator.maybePop(context);
+                      },
                     ),
-                    SizedBox(height: 20),
+                    CredentialsDrawerItem(
+                      selected: index == 1,
+                      title: 'Credentials',
+                      icon: Icons.security,
+                      onTap: () {
+                        context.read<MainScreenCubit>().onChangeDrawerTab(1);
+                        Navigator.maybePop(context);
+                      },
+                    ),
+                    CredentialsDrawerItem(
+                      selected: index == 2,
+                      title: 'Contact Us',
+                      icon: Icons.contact_mail,
+                      onTap: () {
+                        context.read<MainScreenCubit>().onChangeDrawerTab(2);
+                        Navigator.maybePop(context);
+                      },
+                    ),
+                    CredentialsDrawerItem(
+                      selected: index == 3,
+                      title: 'About',
+                      icon: Icons.info,
+                      onTap: () {
+                        context.read<MainScreenCubit>().onChangeDrawerTab(3);
+                        Navigator.maybePop(context);
+                      },
+                    ),
                   ],
-                ),
-              ),
+                );
+              }),
             ),
           ),
         ),
@@ -270,26 +187,57 @@ class _MainScreenState extends State<MainScreen>
     );
   }
 
-  Widget backgroundWidget(BuildContext context) {
-    return AnimatedPositioned(
-      left: isCollapsed ? 0 : 0.57 * screenWidth,
-      right: isCollapsed ? 0 : -0.2 * screenWidth,
-      top: isCollapsed ? 0 : screenHeight * 0.1,
-      bottom: isCollapsed ? 0 : screenHeight * 0.1,
-      duration: duration,
-      curve: Curves.fastOutSlowIn,
-      child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(isCollapsed ? 10 : 65),
-            color: Theme.of(context).backgroundColor,
-          ),
-          child: Column(
+  Widget drawerIcon() {
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_close,
+        progress: _controller,
+      ),
+      onPressed: () {
+        setState(
+          () {
+            if (isCollapsed) {
+              _controller.forward();
+
+              borderRadius = 16.0;
+            } else {
+              _controller.reverse();
+
+              borderRadius = 0.0;
+            }
+
+            isCollapsed = !isCollapsed;
+          },
+        );
+      },
+    );
+  }
+
+  Widget bottomNavBar(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        return Container(
+          color: Theme.of(context).bottomAppBarColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: isCollapsed ? MainAxisSize.max : MainAxisSize.min,
             children: [
-              Row(
-                children: [],
-              )
+              ElevatedButton(
+                  onPressed: () =>
+                      context.read<MainScreenCubit>().onChangeDrawerTab(4),
+                  child: Text('Settings')),
+              FloatingActionButton(
+                  onPressed: () =>
+                      context.read<MainScreenCubit>().onChangeDrawerTab(5),
+                  child: Icon(Icons.add)),
+              ElevatedButton(
+                  onPressed: () =>
+                      context.read<MainScreenCubit>().onChangeDrawerTab(6),
+                  child: Text('Profile')),
             ],
-          )),
+          ),
+        );
+      },
     );
   }
 }
