@@ -1,11 +1,13 @@
 import 'package:credentials_management/src/common/utils.dart';
 import 'package:credentials_management/src/ui/widgets/app_textfield.dart';
+import 'package:credentials_management/src/ui/widgets/credentials_app_bar.dart';
 import 'package:credentials_management/src/ui/widgets/raised_button_icon.dart';
 import 'package:flutter/material.dart';
 
 class CreateCredentialsScreen extends StatefulWidget {
   @override
-  _CreateCredentialsScreenState createState() => _CreateCredentialsScreenState();
+  _CreateCredentialsScreenState createState() =>
+      _CreateCredentialsScreenState();
 }
 
 class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
@@ -18,12 +20,15 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Credentials'),
-        automaticallyImplyLeading: false,
+      appBar: PreferredSize(
+        preferredSize:
+            Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
+        child: const CredentialsAppBar(
+          title: 'Create Credentials',
+        ),
       ),
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(primary: false,
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Column(

@@ -1,3 +1,4 @@
+import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
 import 'package:credentials_management/src/blocs/shared/main_screen_cubit.dart';
 import 'package:credentials_management/src/ui/screens/about_screen.dart';
 import 'package:credentials_management/src/ui/screens/contact_screen.dart';
@@ -25,9 +26,6 @@ class _MainScreenState extends State<MainScreen>
   AppBar appBar = AppBar();
   double borderRadius = 0.0;
 
-  int _navBarIndex = 0;
-  late TabController tabController;
-
   @override
   void initState() {
     super.initState();
@@ -37,22 +35,13 @@ class _MainScreenState extends State<MainScreen>
   @override
   void dispose() {
     _controller.dispose();
-    tabController = TabController(length: 3, vsync: this);
-    tabController.addListener(() {
-      setState(() {
-        _navBarIndex = tabController.index;
-      });
-    });
     super.dispose();
   }
 
-  List<Widget> _screens = const [];
-
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    screenHeight = size.height;
-    screenWidth = size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
 
     return WillPopScope(
       onWillPop: () async {
@@ -63,70 +52,70 @@ class _MainScreenState extends State<MainScreen>
             isCollapsed = !isCollapsed;
           });
           return false;
-        } else
+        } else {
           return true;
+        }
       },
       child: BlocProvider<MainScreenCubit>(
         create: (context) => MainScreenCubit(),
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           resizeToAvoidBottomInset: false,
-          body:Stack(
-              children: <Widget>[
-                menu(context),
-                AnimatedPositioned(
-                  left: isCollapsed ? 0 : 0.6 * screenWidth,
-                  right: isCollapsed ? 0 : -0.2 * screenWidth,
-                  top: isCollapsed ? 0 : screenHeight * 0.1,
-                  bottom: isCollapsed ? 0 : screenHeight * 0.1,
-                  duration: duration,
-                  curve: Curves.fastOutSlowIn,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: BlocBuilder<MainScreenCubit, int>(
-                            builder: (context, index) {
-                          return Stack(
-                            children: [
-                              IndexedStack(
-                                index: index,
-                                children: [
-                                  HomeScreen(),
-                                  CredentialsScreen(),
-                                  ContactUsScreen(),
-                                  AboutScreen(),
-                                  SettingsScreen(),
-                                  CreateCredentialsScreen(),
-                                  ProfileScreen(),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 28.0),
-                                child: drawerIcon(),
-                              ),
-                            ],
-                          );
-                        }),
-                      ),
-                      // bottomNavBar(context),
-                    ],
-                  ),
+          body: Stack(
+            children: <Widget>[
+              menu(),
+              AnimatedPositioned(
+                left: isCollapsed ? 0 : 0.6 * screenWidth,
+                right: isCollapsed ? 0 : -0.2 * screenWidth,
+                top: isCollapsed ? 0 : screenHeight * 0.1,
+                bottom: isCollapsed ? 0 : screenHeight * 0.1,
+                duration: duration,
+                curve: Curves.fastOutSlowIn,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: BlocBuilder<MainScreenCubit, int>(
+                          builder: (context, index) {
+                        return Stack(
+                          children: [
+                            IndexedStack(
+                              index: index,
+                              children: [
+                                const HomeScreen(),
+                                const CredentialsScreen(),
+                                const ContactUsScreen(),
+                                const AboutScreen(),
+                                SettingsScreen(),
+                                CreateCredentialsScreen(),
+                                ProfileScreen(),
+                              ],
+                            ),
+                            Container(
+                              alignment: Alignment.bottomLeft,
+                              height: screenHeight * 0.1,
+                              child: drawerIcon(),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                    // bottomNavBar(context),
+                  ],
                 ),
-              ],
-            ),
-
+              ),
+            ],
+          ),
           bottomNavigationBar: bottomNavBar(context),
-
         ),
       ),
     );
   }
 
-  Widget menu(context) {
+  Widget menu() {
     return SafeArea(
       child: Container(
-        color: Color(0xff2b2d42),
+        color: const Color(0xff2b2d42),
         child: Padding(
           padding: const EdgeInsets.only(left: 32.0),
           child: Align(
@@ -177,6 +166,14 @@ class _MainScreenState extends State<MainScreen>
                         Navigator.maybePop(context);
                       },
                     ),
+                    CredentialsDrawerItem(
+                      selected: false,
+                      title: 'Logout',
+                      icon: Icons.logout,
+                      onTap: () {
+                        context.read<AuthenticationBloc>().add(LoggedOut());
+                      },
+                    ),
                   ],
                 );
               }),
@@ -225,15 +222,15 @@ class _MainScreenState extends State<MainScreen>
               ElevatedButton(
                   onPressed: () =>
                       context.read<MainScreenCubit>().onChangeDrawerTab(4),
-                  child: Text('Settings')),
+                  child: const Text('Settings')),
               FloatingActionButton(
                   onPressed: () =>
                       context.read<MainScreenCubit>().onChangeDrawerTab(5),
-                  child: Icon(Icons.add)),
+                  child: const Icon(Icons.add)),
               ElevatedButton(
                   onPressed: () =>
                       context.read<MainScreenCubit>().onChangeDrawerTab(6),
-                  child: Text('Profile')),
+                  child: const Text('Profile')),
             ],
           ),
         );

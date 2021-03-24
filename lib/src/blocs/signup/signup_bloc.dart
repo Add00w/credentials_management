@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
 import 'package:credentials_management/src/services/repositories/user_repository.dart';
-import 'package:flutter/foundation.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -13,9 +12,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   SignupBloc({
     required this.authenticationBloc,
     required this.userRepository,
-  })   : assert(authenticationBloc != null),
-        assert(userRepository != null),
-        super(SignupInitial());
+  }) : super(SignupInitial());
   final AuthenticationBloc authenticationBloc;
   final UserRepository userRepository;
   @override
