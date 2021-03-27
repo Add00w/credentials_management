@@ -1,13 +1,14 @@
 import 'dart:developer';
 
 import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
-import 'package:credentials_management/src/blocs/login/login_bloc.dart';
+import 'package:credentials_management/src/blocs/login/login_cubit.dart';
 import 'package:credentials_management/src/services/repositories/user_repository.dart';
 import 'package:credentials_management/src/ui/screens/login_screen.dart';
 import 'package:credentials_management/src/ui/screens/main_screen.dart';
 import 'package:credentials_management/src/ui/widgets/circular_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 
 class SimpleBlocDelegate extends BlocObserver {
   @override
@@ -49,8 +50,7 @@ class SimpleBlocDelegate extends BlocObserver {
 
 void main() {
   Bloc.observer = SimpleBlocDelegate();
-
-  runApp(BlocProvider(
+  Hive.runApp(BlocProvider(
     create: (context) => AuthenticationBloc()..add(AppStarted()),
     child: RepositoryProvider(
       create: (context) => UserRepository(),
@@ -76,8 +76,8 @@ class CredentialsManagementApp extends StatelessWidget {
             ? CircularLoading()
             : state is Authenticated
                 ? MainScreen()
-                : BlocProvider<LoginBloc>(
-                    create: (context) => LoginBloc(
+                : BlocProvider<LoginCubit>(
+                    create: (context) => LoginCubit(
                       authenticationBloc: context.read<AuthenticationBloc>(),
                       userRepository: context.read<UserRepository>(),
                     ),

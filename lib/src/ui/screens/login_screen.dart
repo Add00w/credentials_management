@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
-import 'package:credentials_management/src/blocs/login/login_bloc.dart';
-import 'package:credentials_management/src/blocs/signup/signup_bloc.dart';
+import 'package:credentials_management/src/blocs/login/login_cubit.dart';
+import 'package:credentials_management/src/blocs/signup/signup_cubit.dart';
 import 'package:credentials_management/src/common/utils.dart';
 import 'package:credentials_management/src/services/repositories/user_repository.dart';
 import 'package:credentials_management/src/ui/screens/signup_screen.dart';
@@ -51,8 +51,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     keyboard: TextInputType.visiblePassword,
                     isPassword: true,
                   ),
-                  BlocConsumer<LoginBloc, LoginState>(
-                    bloc: context.read<LoginBloc>(),
+                  BlocConsumer<LoginCubit, LoginState>(
+                    bloc: context.read<LoginCubit>(),
                     builder: (context, state) {
                       return FractionallySizedBox(
                         widthFactor: 0.85,
@@ -65,8 +65,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     listener: (context, state) {
-                      if (state is LoginSucces) {
-                        //login success
+                      if (state is LoginFailed) {
+                        //Show error dialog
                       }
                     },
                   ),
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       InkWell(
-                        onTap: _signup,
+                        onTap: _signUp,
                         child: const Padding(
                           padding: EdgeInsets.only(left: 8.0),
                           child: Text(
@@ -136,35 +136,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _validateAndLogin() {
     if (_formKey.currentState!.validate()) {
-      context.read<LoginBloc>().add(
-            LoginWithEmailAndPassword(
-              email: _emailController.text,
-              password: _passwordController.text,
-            ),
-          );
+      context.read<LoginCubit>().loginWithEmailAndPassword(
+          _emailController.text, _passwordController.text);
     }
   }
 
   Future<void> _fingerprint() async {
     final localAuth = LocalAuthentication();
     final bool didAuthenticate = await localAuth.authenticate(
-      localizedReason: 'Please authenticate to show account balance',
+      localizedReason: 'Please authenticate to show your account',
     );
     log(didAuthenticate.toString());
     if (didAuthenticate) {
-      context.read<LoginBloc>().add(LoginWithFingerprint(authenticated: true));
+      context
+          .read<LoginCubit>()
+          .loginWithFingerprint(authenticated: didAuthenticate);
     }
   }
 
-  void _signup() {
+  void _signUp() {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (_) => BlocProvider<SignupBloc>(
-                create: (_) => SignupBloc(
+          builder: (_) => BlocProvider<SignUpCubit>(
+                create: (_) => SignUpCubit(
                   authenticationBloc: context.read<AuthenticationBloc>(),
                   userRepository: context.read<UserRepository>(),
                 ),
-                child: SignupScreen(),
+                child: SignUpScreen(),
               )),
     );
   }
