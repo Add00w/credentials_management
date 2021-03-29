@@ -14,36 +14,43 @@ class HomeScreen extends StatelessWidget {
           title: 'Home',
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 50),
-            SizedBox(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 50),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
               height: 200,
-              child: PageView(
-                controller: PageController(viewportFraction: 0.8),
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    color: Colors.redAccent,
-                    width: 100,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    color: Colors.blueAccent,
-                    width: 100,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    color: Colors.greenAccent,
-                    width: 100,
-                  ),
+              decoration: const BoxDecoration(
+                border: Border(right: BorderSide(color: Colors.white54)),
+                gradient: LinearGradient(
+                  colors: [Colors.white12, Colors.white10, Colors.black12],
+                ),
+              ),
+              margin: const EdgeInsets.all(15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('data'),
+                  Text('data'),
+                  Text('data'),
+                  Text('data'),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            Positioned(
+              top: 0.0,
+              left: 5.5,
+              child: Container(
+                transform: Matrix4.skewX(0.5)
+                  ..rotateX(0.1)
+                  ..rotateY(-0.5),
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: 100,
+                color: Colors.red,
+              ),
+            )
           ],
         ),
       ),

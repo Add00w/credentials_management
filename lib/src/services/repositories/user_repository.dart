@@ -14,7 +14,7 @@ class UserRepository {
     required String email,
     required String password,
   }) async {
-    TODO: //Register the user then signin and return token
+    TODO: //Register the user then signIn and return token
     return Future.delayed(const Duration(seconds: 1), () => email + password);
   }
 

@@ -10,9 +10,9 @@ part 'auth_state.dart';
 
 class AuthenticationBloc extends Bloc<AuthEvent, AuthState> {
   AuthenticationBloc()
-      : secureStorageRepo = SecureStorageRepostitory(),
+      : secureStorageRepo = SecureStorageRepository(),
         super(AuthInitial());
-  final SecureStorageRepostitory secureStorageRepo;
+  final SecureStorageRepository secureStorageRepo;
   @override
   Stream<AuthState> mapEventToState(
     AuthEvent event,

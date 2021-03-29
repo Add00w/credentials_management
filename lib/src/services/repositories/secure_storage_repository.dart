@@ -1,6 +1,6 @@
 import 'package:credentials_management/src/common/storage.dart';
 
-class SecureStorageRepostitory {
+class SecureStorageRepository {
   /// delete from keystore/keychain
   Future<void> deleteToken() async {
     Storage().token = '';

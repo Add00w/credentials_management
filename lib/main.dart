@@ -8,7 +8,6 @@ import 'package:credentials_management/src/ui/screens/main_screen.dart';
 import 'package:credentials_management/src/ui/widgets/circular_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 
 class SimpleBlocDelegate extends BlocObserver {
   @override
@@ -50,7 +49,8 @@ class SimpleBlocDelegate extends BlocObserver {
 
 void main() {
   Bloc.observer = SimpleBlocDelegate();
-  Hive.runApp(BlocProvider(
+
+  runApp(BlocProvider(
     create: (context) => AuthenticationBloc()..add(AppStarted()),
     child: RepositoryProvider(
       create: (context) => UserRepository(),
@@ -71,18 +71,20 @@ class CredentialsManagementApp extends StatelessWidget {
         primaryColor: const Color.fromRGBO(48, 49, 52, 1.0),
         appBarTheme: const AppBarTheme(centerTitle: true),
       ),
-      home: BlocBuilder<AuthenticationBloc, AuthState>(
-        builder: (context, state) => state is AuthInitial
-            ? CircularLoading()
-            : state is Authenticated
-                ? MainScreen()
-                : BlocProvider<LoginCubit>(
-                    create: (context) => LoginCubit(
-                      authenticationBloc: context.read<AuthenticationBloc>(),
-                      userRepository: context.read<UserRepository>(),
+      home: SafeArea(
+        child: BlocBuilder<AuthenticationBloc, AuthState>(
+          builder: (context, state) => state is AuthInitial
+              ? CircularLoading()
+              : state is Authenticated
+                  ? MainScreen()
+                  : BlocProvider<LoginCubit>(
+                      create: (context) => LoginCubit(
+                        authenticationBloc: context.read<AuthenticationBloc>(),
+                        userRepository: context.read<UserRepository>(),
+                      ),
+                      child: LoginScreen(),
                     ),
-                    child: LoginScreen(),
-                  ),
+        ),
       ),
     );
   }

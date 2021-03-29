@@ -16,6 +16,13 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   final TextEditingController _noteController = TextEditingController();
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

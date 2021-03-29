@@ -1,9 +1,16 @@
 import 'package:hive/hive.dart';
 
-part 'person.g.dart';
+part 'credentials.g.dart';
 
 @HiveType(typeId: 1)
-class Person {
+class Credentials extends HiveObject {
+  Credentials(
+    this.brandName,
+    this.userName,
+    this.email,
+    this.password,
+    this.icon,
+  );
   @HiveField(0)
   final String brandName;
 
@@ -16,19 +23,4 @@ class Person {
   final String password;
   @HiveField(4)
   final String? icon;
-}
-
-class Credentials {
-  final String brandName;
-  final String? userName;
-  final String email;
-  final String password;
-  final String? icon;
-  Credentials({
-    required this.brandName,
-    this.userName,
-    required this.email,
-    required this.password,
-    this.icon,
-  });
 }
