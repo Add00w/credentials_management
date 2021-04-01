@@ -9,6 +9,7 @@ class CredentialsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      toolbarHeight: 100,
       title: Text(title),
       automaticallyImplyLeading: false,
     );

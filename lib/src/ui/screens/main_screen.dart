@@ -91,11 +91,7 @@ class _MainScreenState extends State<MainScreen>
                                 ProfileScreen(),
                               ],
                             ),
-                            Container(
-                              alignment: Alignment.bottomLeft,
-                              height: screenHeight * 0.1,
-                              child: drawerIcon(),
-                            ),
+                            SizedBox(height: 100, child: drawerIcon()),
                           ],
                         );
                       }),
@@ -215,6 +211,7 @@ class _MainScreenState extends State<MainScreen>
       builder: (context) {
         return Container(
           color: Theme.of(context).bottomAppBarColor,
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: isCollapsed ? MainAxisSize.max : MainAxisSize.min,
