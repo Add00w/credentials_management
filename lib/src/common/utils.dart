@@ -9,4 +9,9 @@ class Utils {
   static String? isNotEmpty(String? value) {
     return value!.isNotEmpty ? null : "This is required";
   }
+
+  static Future<String> getCompanyLogo(String domain) {
+    //get this domainns logo and return
+    return Future.delayed(Duration.zero, () => '');
+  }
 }

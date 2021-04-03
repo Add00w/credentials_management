@@ -22,5 +22,6 @@ class Credentials extends HiveObject {
   @HiveField(3)
   final String password;
   @HiveField(4)
-  final String? icon;
+  String? icon;
+  //I removed final keyword from icon
 }

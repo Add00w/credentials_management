@@ -1,5 +1,7 @@
 import 'package:credentials_management/src/blocs/credentials/credentials_cubit.dart';
 import 'package:credentials_management/src/common/utils.dart';
+import 'package:credentials_management/src/models/credentials.dart';
+import 'package:credentials_management/src/services/repositories/credentials_repository.dart';
 import 'package:credentials_management/src/ui/widgets/app_textfield.dart';
 import 'package:credentials_management/src/ui/widgets/credentials_app_bar.dart';
 import 'package:credentials_management/src/ui/widgets/raised_button_icon.dart';
@@ -16,14 +18,17 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _brandNameController = TextEditingController();
 
-  final TextEditingController _noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _noteController.dispose();
+    _usernameController.dispose();
+    _brandNameController.dispose();
     super.dispose();
   }
 
@@ -40,7 +45,8 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: BlocProvider<CredentialsCubit>(
-          create: (_) => CredentialsCubit(),
+          create: (_) =>
+              CredentialsCubit(context.read<CredentialsRepository>()),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Form(
@@ -53,12 +59,12 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
                     validator: Utils.isEmail,
                   ),
                   AppTextField(
-                    controller: _emailController,
+                    controller: _usernameController,
                     hint: 'Username',
-                    validator: Utils.isEmail,
+                    validator: Utils.isNotEmpty,
                   ),
                   AppTextField(
-                    controller: _noteController,
+                    controller: _brandNameController,
                     hint: 'Brand name',
                     validator: Utils.isNotEmpty,
                   ),
@@ -71,7 +77,15 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
                     onPressed: () {
                       _formKey.currentState!.save();
                       if (_formKey.currentState!.validate()) {
-                        _submit();
+                        context.read<CredentialsCubit>().createCredentials(
+                              Credentials(
+                                _brandNameController.text,
+                                _usernameController.text,
+                                _emailController.text,
+                                _passwordController.text,
+                                null,
+                              ),
+                            );
                       }
                     },
                     icon: Icons.save,
@@ -85,6 +99,4 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
       ),
     );
   }
-
-  void _submit() {}
 }

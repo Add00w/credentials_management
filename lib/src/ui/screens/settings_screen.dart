@@ -9,7 +9,7 @@ class SettingsScreen extends StatelessWidget {
         preferredSize:
             Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
         child: const CredentialsAppBar(
-          title: 'Create Credentials',
+          title: 'Settings',
         ),
       ),
       body: const SizedBox(),

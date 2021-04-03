@@ -2,12 +2,16 @@ import 'dart:developer';
 
 import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
 import 'package:credentials_management/src/blocs/login/login_cubit.dart';
+import 'package:credentials_management/src/models/credentials.dart';
+import 'package:credentials_management/src/services/repositories/credentials_repository.dart';
 import 'package:credentials_management/src/services/repositories/user_repository.dart';
 import 'package:credentials_management/src/ui/screens/login_screen.dart';
 import 'package:credentials_management/src/ui/screens/main_screen.dart';
 import 'package:credentials_management/src/ui/widgets/circular_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class SimpleBlocDelegate extends BlocObserver {
   @override
@@ -47,13 +51,18 @@ class SimpleBlocDelegate extends BlocObserver {
   }
 }
 
-void main() {
+Future<void> main() async {
   Bloc.observer = SimpleBlocDelegate();
-
+  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
+  Hive.registerAdapter(CredentialsAdapter());
   runApp(BlocProvider(
     create: (context) => AuthenticationBloc()..add(AppStarted()),
-    child: RepositoryProvider(
-      create: (context) => UserRepository(),
+    child: MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => UserRepository()),
+        RepositoryProvider(create: (context) => CredentialsRepository()),
+      ],
       child: CredentialsManagementApp(),
     ),
   ));

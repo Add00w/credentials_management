@@ -1,3 +1,4 @@
+import 'package:credentials_management/src/ui/widgets/credential_widget.dart';
 import 'package:credentials_management/src/ui/widgets/credentials_app_bar.dart';
 import 'package:flutter/material.dart';
 
