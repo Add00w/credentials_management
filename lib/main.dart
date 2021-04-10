@@ -52,12 +52,16 @@ class SimpleBlocDelegate extends BlocObserver {
 }
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocDelegate();
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(CredentialsAdapter());
   runApp(BlocProvider(
-    create: (context) => AuthenticationBloc()..add(AppStarted()),
+    create: (context) => AuthenticationBloc()
+      ..add(
+        AppStarted(),
+      ),
     child: MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (context) => UserRepository()),

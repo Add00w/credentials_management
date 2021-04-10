@@ -47,51 +47,53 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
         child: BlocProvider<CredentialsCubit>(
           create: (_) =>
               CredentialsCubit(context.read<CredentialsRepository>()),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  AppTextField(
-                    controller: _emailController,
-                    hint: 'Email',
-                    validator: Utils.isEmail,
-                  ),
-                  AppTextField(
-                    controller: _usernameController,
-                    hint: 'Username',
-                    validator: Utils.isNotEmpty,
-                  ),
-                  AppTextField(
-                    controller: _brandNameController,
-                    hint: 'Brand name',
-                    validator: Utils.isNotEmpty,
-                  ),
-                  AppTextField(
-                    controller: _passwordController,
-                    hint: 'Password',
-                    validator: Utils.isNotEmpty,
-                  ),
-                  RaisedButtonIcon(
-                    onPressed: () {
-                      _formKey.currentState!.save();
-                      if (_formKey.currentState!.validate()) {
-                        context.read<CredentialsCubit>().createCredentials(
-                              Credentials(
-                                _brandNameController.text,
-                                _usernameController.text,
-                                _emailController.text,
-                                _passwordController.text,
-                                null,
-                              ),
-                            );
-                      }
-                    },
-                    icon: Icons.save,
-                    label: 'Create',
-                  )
-                ],
+          child: Builder(
+            builder: (context) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    AppTextField(
+                      controller: _emailController,
+                      hint: 'Email',
+                      validator: Utils.isEmail,
+                    ),
+                    AppTextField(
+                      controller: _usernameController,
+                      hint: 'Username',
+                      validator: Utils.isNotEmpty,
+                    ),
+                    AppTextField(
+                      controller: _brandNameController,
+                      hint: 'Brand name',
+                      validator: Utils.isNotEmpty,
+                    ),
+                    AppTextField(
+                      controller: _passwordController,
+                      hint: 'Password',
+                      validator: Utils.isNotEmpty,
+                    ),
+                    RaisedButtonIcon(
+                      onPressed: () {
+                        _formKey.currentState!.save();
+                        if (_formKey.currentState!.validate()) {
+                          context.read<CredentialsCubit>().createCredentials(
+                                Credentials(
+                                  _brandNameController.text,
+                                  _usernameController.text,
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  null,
+                                ),
+                              );
+                        }
+                      },
+                      icon: Icons.save,
+                      label: 'Create',
+                    )
+                  ],
+                ),
               ),
             ),
           ),

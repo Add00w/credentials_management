@@ -12,6 +12,8 @@ class CredentialsCubit extends Cubit<CredentialsState> {
   Future<void> createCredentials(Credentials credential) async {
     final icon = await Utils.getCompanyLogo(credential.email);
     credential.icon = icon;
-    credentialsRepository.add(credential).then((index) {});
+    credentialsRepository.add(credential).then((index) {
+      //emit state
+    });
   }
 }
