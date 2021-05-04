@@ -26,6 +26,8 @@ class _MainScreenState extends State<MainScreen>
   AppBar appBar = AppBar();
   double borderRadius = 0.0;
 
+  String title = 'Home';
+
   @override
   void initState() {
     super.initState();
@@ -58,52 +60,56 @@ class _MainScreenState extends State<MainScreen>
       },
       child: BlocProvider<MainScreenCubit>(
         create: (context) => MainScreenCubit(),
-        child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: <Widget>[
-              menu(),
-              AnimatedPositioned(
-                left: isCollapsed ? 0 : 0.6 * screenWidth,
-                right: isCollapsed ? 0 : -0.2 * screenWidth,
-                top: isCollapsed ? 0 : screenHeight * 0.1,
-                bottom: isCollapsed ? 0 : screenHeight * 0.1,
-                duration: duration,
-                curve: Curves.fastOutSlowIn,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: BlocBuilder<MainScreenCubit, int>(
-                          builder: (context, index) {
-                        return Stack(
-                          children: [
-                            IndexedStack(
-                              index: index,
-                              children: [
-                                const HomeScreen(),
-                                const CredentialsScreen(),
-                                const ContactUsScreen(),
-                                const AboutScreen(),
-                                SettingsScreen(),
-                                CreateCredentialsScreen(),
-                                ProfileScreen(),
-                              ],
-                            ),
-                            SizedBox(height: 100, child: drawerIcon()),
-                          ],
-                        );
-                      }),
+        child: BlocConsumer<MainScreenCubit, int>(
+            listener: (context, index) => _changeTitle(index),
+            builder: (context, index) {
+              return Scaffold(
+                appBar: AppBar(
+                  toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+                  title: Text(title),
+                  automaticallyImplyLeading: false,
+                  leading: drawerIcon(),
+                ),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                resizeToAvoidBottomInset: false,
+                body: Stack(
+                  children: <Widget>[
+                    menu(),
+                    AnimatedPositioned(
+                      left: isCollapsed ? 0 : 0.6 * screenWidth,
+                      right: isCollapsed ? 0 : -0.2 * screenWidth,
+                      top: isCollapsed ? 0 : screenHeight * 0.1,
+                      bottom: isCollapsed ? 0 : screenHeight * 0.1,
+                      duration: duration,
+                      curve: Curves.fastOutSlowIn,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: Stack(
+                            children: [
+                              IndexedStack(
+                                index: index,
+                                children: [
+                                  const HomeScreen(),
+                                  CredentialsScreen(),
+                                  const ContactUsScreen(),
+                                  const AboutScreen(),
+                                  const SettingsScreen(),
+                                  const CreateCredentialsScreen(),
+                                  const ProfileScreen(),
+                                ],
+                              ),
+                            ],
+                          )),
+                        ],
+                      ),
                     ),
-                    // bottomNavBar(context),
                   ],
                 ),
-              ),
-            ],
-          ),
-          bottomNavigationBar: bottomNavBar(context),
-        ),
+                bottomNavigationBar: bottomNavBar(context),
+              );
+            }),
       ),
     );
   }
@@ -130,37 +136,25 @@ class _MainScreenState extends State<MainScreen>
                       selected: index == 0,
                       title: 'home',
                       icon: Icons.home,
-                      onTap: () {
-                        context.read<MainScreenCubit>().onChangeDrawerTab(0);
-                        Navigator.maybePop(context);
-                      },
+                      onTap: () => _changePage(context, 0),
                     ),
                     CredentialsDrawerItem(
                       selected: index == 1,
                       title: 'Credentials',
                       icon: Icons.security,
-                      onTap: () {
-                        context.read<MainScreenCubit>().onChangeDrawerTab(1);
-                        Navigator.maybePop(context);
-                      },
+                      onTap: () => _changePage(context, 1),
                     ),
                     CredentialsDrawerItem(
                       selected: index == 2,
                       title: 'Contact Us',
                       icon: Icons.contact_mail,
-                      onTap: () {
-                        context.read<MainScreenCubit>().onChangeDrawerTab(2);
-                        Navigator.maybePop(context);
-                      },
+                      onTap: () => _changePage(context, 2),
                     ),
                     CredentialsDrawerItem(
                       selected: index == 3,
                       title: 'About',
                       icon: Icons.info,
-                      onTap: () {
-                        context.read<MainScreenCubit>().onChangeDrawerTab(3);
-                        Navigator.maybePop(context);
-                      },
+                      onTap: () => _changePage(context, 3),
                     ),
                     CredentialsDrawerItem(
                       selected: false,
@@ -178,6 +172,12 @@ class _MainScreenState extends State<MainScreen>
         ),
       ),
     );
+  }
+
+  void _changePage(BuildContext context, int index) {
+    context.read<MainScreenCubit>().onChangeDrawerTab(index);
+    _changeTitle(index);
+    Navigator.maybePop(context);
   }
 
   Widget drawerIcon() {
@@ -217,21 +217,45 @@ class _MainScreenState extends State<MainScreen>
             mainAxisSize: isCollapsed ? MainAxisSize.max : MainAxisSize.min,
             children: [
               ElevatedButton(
-                  onPressed: () =>
-                      context.read<MainScreenCubit>().onChangeDrawerTab(4),
+                  onPressed: () => _changePage(context, 4),
                   child: const Text('Settings')),
               FloatingActionButton(
-                  onPressed: () =>
-                      context.read<MainScreenCubit>().onChangeDrawerTab(5),
+                  onPressed: () => _changePage(context, 5),
                   child: const Icon(Icons.add)),
               ElevatedButton(
-                  onPressed: () =>
-                      context.read<MainScreenCubit>().onChangeDrawerTab(6),
+                  onPressed: () => _changePage(context, 6),
                   child: const Text('Profile')),
             ],
           ),
         );
       },
     );
+  }
+
+  void _changeTitle(int index) {
+    switch (index) {
+      case 0:
+        title = 'Home';
+        break;
+      case 1:
+        title = 'Credentials';
+        break;
+      case 2:
+        title = 'Contact Us';
+        break;
+      case 3:
+        title = 'About';
+        break;
+      case 4:
+        title = 'Settings';
+        break;
+      case 5:
+        title = 'Create Credentials';
+        break;
+      case 6:
+        title = 'Profile';
+        break;
+      default:
+    }
   }
 }

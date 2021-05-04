@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
+import 'package:credentials_management/src/blocs/credentials/credentials_cubit.dart';
 import 'package:credentials_management/src/blocs/login/login_cubit.dart';
 import 'package:credentials_management/src/models/credentials.dart';
 import 'package:credentials_management/src/services/repositories/credentials_repository.dart';
@@ -57,19 +58,25 @@ Future<void> main() async {
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(CredentialsAdapter());
-  runApp(BlocProvider(
-    create: (context) => AuthenticationBloc()
-      ..add(
-        AppStarted(),
-      ),
-    child: MultiRepositoryProvider(
+  runApp(
+    MultiBlocProvider(
       providers: [
-        RepositoryProvider(create: (context) => UserRepository()),
-        RepositoryProvider(create: (context) => CredentialsRepository()),
+        BlocProvider(
+          create: (context) => AuthenticationBloc()..add(AppStarted()),
+        ),
+        BlocProvider(
+          create: (context) => CredentialsCubit(CredentialsRepository()),
+        ),
       ],
-      child: CredentialsManagementApp(),
+      child: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(create: (context) => UserRepository()),
+          // RepositoryProvider.value(value: _credentialsRepo),
+        ],
+        child: CredentialsManagementApp(),
+      ),
     ),
-  ));
+  );
 }
 
 class CredentialsManagementApp extends StatelessWidget {

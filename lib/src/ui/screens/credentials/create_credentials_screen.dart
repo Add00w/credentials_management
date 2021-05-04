@@ -1,14 +1,15 @@
 import 'package:credentials_management/src/blocs/credentials/credentials_cubit.dart';
+import 'package:credentials_management/src/blocs/shared/main_screen_cubit.dart';
 import 'package:credentials_management/src/common/utils.dart';
 import 'package:credentials_management/src/models/credentials.dart';
-import 'package:credentials_management/src/services/repositories/credentials_repository.dart';
 import 'package:credentials_management/src/ui/widgets/app_textfield.dart';
-import 'package:credentials_management/src/ui/widgets/credentials_app_bar.dart';
+import 'package:credentials_management/src/ui/widgets/circular_loading.dart';
 import 'package:credentials_management/src/ui/widgets/raised_button_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateCredentialsScreen extends StatefulWidget {
+  const CreateCredentialsScreen();
   @override
   _CreateCredentialsScreenState createState() =>
       _CreateCredentialsScreenState();
@@ -35,66 +36,67 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
-        child: const CredentialsAppBar(
-          title: 'Create Credentials',
-        ),
-      ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-        child: BlocProvider<CredentialsCubit>(
-          create: (_) =>
-              CredentialsCubit(context.read<CredentialsRepository>()),
-          child: Builder(
-            builder: (context) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    AppTextField(
-                      controller: _emailController,
-                      hint: 'Email',
-                      validator: Utils.isEmail,
-                    ),
-                    AppTextField(
-                      controller: _usernameController,
-                      hint: 'Username',
-                      validator: Utils.isNotEmpty,
-                    ),
-                    AppTextField(
-                      controller: _brandNameController,
-                      hint: 'Brand name',
-                      validator: Utils.isNotEmpty,
-                    ),
-                    AppTextField(
-                      controller: _passwordController,
-                      hint: 'Password',
-                      validator: Utils.isNotEmpty,
-                    ),
-                    RaisedButtonIcon(
-                      onPressed: () {
-                        _formKey.currentState!.save();
-                        if (_formKey.currentState!.validate()) {
-                          context.read<CredentialsCubit>().createCredentials(
-                                Credentials(
-                                  _brandNameController.text,
-                                  _usernameController.text,
-                                  _emailController.text,
-                                  _passwordController.text,
-                                  null,
-                                ),
-                              );
-                        }
-                      },
-                      icon: Icons.save,
-                      label: 'Create',
-                    )
-                  ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                AppTextField(
+                  controller: _emailController,
+                  hint: 'Email',
+                  validator: Utils.isEmail,
                 ),
-              ),
+                AppTextField(
+                  controller: _usernameController,
+                  hint: 'Username',
+                  validator: Utils.isNotEmpty,
+                ),
+                AppTextField(
+                  controller: _brandNameController,
+                  hint: 'Brand name',
+                  validator: Utils.isNotEmpty,
+                ),
+                AppTextField(
+                  controller: _passwordController,
+                  hint: 'Password',
+                  validator: Utils.isNotEmpty,
+                ),
+                BlocConsumer<CredentialsCubit, CredentialsState>(
+                  builder: (context, state) {
+                    return state is AddCredentialInProgress
+                        ? CircularLoading()
+                        : RaisedButtonIcon(
+                            onPressed: () {
+                              _formKey.currentState!.save();
+                              if (_formKey.currentState!.validate()) {
+                                context
+                                    .read<CredentialsCubit>()
+                                    .createCredentials(
+                                      Credentials(
+                                        _brandNameController.text,
+                                        _usernameController.text,
+                                        _emailController.text,
+                                        _passwordController.text,
+                                        null,
+                                      ),
+                                    );
+                              }
+                            },
+                            icon: Icons.save,
+                            label: 'Create',
+                          );
+                  },
+                  listener: (context, state) {
+                    // if added successfully navigated to crdentials page
+                    if (state is CredentialsAdded) {
+                      context.read<MainScreenCubit>().onChangeDrawerTab(1);
+                    }
+                  },
+                )
+              ],
             ),
           ),
         ),

@@ -10,14 +10,11 @@ import 'package:http/http.dart' as http;
 class CredentialsRepository {
   late Box credentialsBox;
   CredentialsRepository() {
-    Hive.openBox<Credentials>('credentials').then((box) {
-      credentialsBox = box;
-      debugPrint(credentialsBox.name);
-    });
+    _openBox();
   }
   Future<int> add(Credentials credential) async {
     final credentials = Hive.box<Credentials>('credentials');
-    final icon = await getBestFavicon(credential.brandName);
+    final icon = await _getBestFavicon(credential.brandName);
     log('icon:$icon');
     credential.icon = icon;
     final index = await credentials.add(credential);
@@ -34,11 +31,15 @@ class CredentialsRepository {
     await Hive.box<Credentials>('credentials').deleteAt(index);
   }
 
-  Future<Iterable<Credentials>> getCredentials() async {
-    return Hive.box<Credentials>('credentials').values;
+  Future<List<Credentials>> getCredentials() async {
+    log('credentials');
+    if (!Hive.isBoxOpen('credentials')) {
+      await _openBox();
+    }
+    return Hive.box<Credentials>('credentials').values.toList();
   }
 
-  Future<String> getBestFavicon(String url) async {
+  Future<String> _getBestFavicon(String url) async {
     try {
       final response = await http.get(
         Uri.tryParse('https://i.olsh.me/allicons.json?'
@@ -59,5 +60,9 @@ class CredentialsRepository {
 
       return '';
     }
+  }
+
+  Future<void> _openBox() async {
+    credentialsBox = await Hive.openBox<Credentials>('credentials');
   }
 }

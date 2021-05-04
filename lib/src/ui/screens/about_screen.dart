@@ -5,15 +5,8 @@ class AboutScreen extends StatelessWidget {
   const AboutScreen();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
-        child: const CredentialsAppBar(
-          title: 'About Us',
-        ),
-      ),
-      body: const Center(
+    return const Scaffold(
+      body:  Center(
         child: Text(
           'data',
           style: TextStyle(
