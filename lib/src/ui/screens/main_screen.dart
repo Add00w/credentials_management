@@ -19,7 +19,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
   bool isCollapsed = true;
-  late double screenWidth, screenHeight;
+  late double screenWidth;
+  late double screenHeight;
   final Duration duration = const Duration(milliseconds: 500);
   late AnimationController _controller;
 
@@ -61,32 +62,32 @@ class _MainScreenState extends State<MainScreen>
       child: BlocProvider<MainScreenCubit>(
         create: (context) => MainScreenCubit(),
         child: BlocConsumer<MainScreenCubit, int>(
-            listener: (context, index) => _changeTitle(index),
-            builder: (context, index) {
-              return Scaffold(
-                appBar: AppBar(
-                  toolbarHeight: MediaQuery.of(context).size.height * 0.1,
-                  title: Text(title),
-                  automaticallyImplyLeading: false,
-                  leading: drawerIcon(),
-                ),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                resizeToAvoidBottomInset: false,
-                body: Stack(
-                  children: <Widget>[
-                    menu(),
-                    AnimatedPositioned(
-                      left: isCollapsed ? 0 : 0.6 * screenWidth,
-                      right: isCollapsed ? 0 : -0.2 * screenWidth,
-                      top: isCollapsed ? 0 : screenHeight * 0.1,
-                      bottom: isCollapsed ? 0 : screenHeight * 0.1,
-                      duration: duration,
-                      curve: Curves.fastOutSlowIn,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: Stack(
+          listener: (context, index) => _changeTitle(index),
+          builder: (context, index) {
+            return Scaffold(
+              appBar: AppBar(
+                toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+                title: Text(title),
+                automaticallyImplyLeading: false,
+                leading: drawerIcon(),
+              ),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              resizeToAvoidBottomInset: false,
+              body: Stack(
+                children: <Widget>[
+                  menu(),
+                  AnimatedPositioned(
+                    left: isCollapsed ? 0 : 0.6 * screenWidth,
+                    right: isCollapsed ? 0 : -0.2 * screenWidth,
+                    top: isCollapsed ? 0 : screenHeight * 0.1,
+                    bottom: isCollapsed ? 0 : screenHeight * 0.1,
+                    duration: duration,
+                    curve: Curves.fastOutSlowIn,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Stack(
                             children: [
                               IndexedStack(
                                 index: index,
@@ -101,15 +102,17 @@ class _MainScreenState extends State<MainScreen>
                                 ],
                               ),
                             ],
-                          )),
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                bottomNavigationBar: bottomNavBar(context),
-              );
-            }),
+                  ),
+                ],
+              ),
+              bottomNavigationBar: bottomNavBar(context),
+            );
+          },
+        ),
       ),
     );
   }
@@ -125,48 +128,49 @@ class _MainScreenState extends State<MainScreen>
             child: FractionallySizedBox(
               widthFactor: 0.6,
               heightFactor: 0.8,
-              child:
-                  BlocBuilder<MainScreenCubit, int>(builder: (context, index) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CredentialsDrawerItem(
-                      selected: index == 0,
-                      title: 'home',
-                      icon: Icons.home,
-                      onTap: () => _changePage(context, 0),
-                    ),
-                    CredentialsDrawerItem(
-                      selected: index == 1,
-                      title: 'Credentials',
-                      icon: Icons.security,
-                      onTap: () => _changePage(context, 1),
-                    ),
-                    CredentialsDrawerItem(
-                      selected: index == 2,
-                      title: 'Contact Us',
-                      icon: Icons.contact_mail,
-                      onTap: () => _changePage(context, 2),
-                    ),
-                    CredentialsDrawerItem(
-                      selected: index == 3,
-                      title: 'About',
-                      icon: Icons.info,
-                      onTap: () => _changePage(context, 3),
-                    ),
-                    CredentialsDrawerItem(
-                      selected: false,
-                      title: 'Logout',
-                      icon: Icons.logout,
-                      onTap: () {
-                        context.read<AuthenticationBloc>().add(LoggedOut());
-                      },
-                    ),
-                  ],
-                );
-              }),
+              child: BlocBuilder<MainScreenCubit, int>(
+                builder: (context, index) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      CredentialsDrawerItem(
+                        selected: index == 0,
+                        title: 'home',
+                        icon: Icons.home,
+                        onTap: () => _changePage(context, 0),
+                      ),
+                      CredentialsDrawerItem(
+                        selected: index == 1,
+                        title: 'Credentials',
+                        icon: Icons.security,
+                        onTap: () => _changePage(context, 1),
+                      ),
+                      CredentialsDrawerItem(
+                        selected: index == 2,
+                        title: 'Contact Us',
+                        icon: Icons.contact_mail,
+                        onTap: () => _changePage(context, 2),
+                      ),
+                      CredentialsDrawerItem(
+                        selected: index == 3,
+                        title: 'About',
+                        icon: Icons.info,
+                        onTap: () => _changePage(context, 3),
+                      ),
+                      CredentialsDrawerItem(
+                        selected: false,
+                        title: 'Logout',
+                        icon: Icons.logout,
+                        onTap: () {
+                          context.read<AuthenticationBloc>().add(LoggedOut());
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -217,14 +221,17 @@ class _MainScreenState extends State<MainScreen>
             mainAxisSize: isCollapsed ? MainAxisSize.max : MainAxisSize.min,
             children: [
               ElevatedButton(
-                  onPressed: () => _changePage(context, 4),
-                  child: const Text('Settings')),
+                onPressed: () => _changePage(context, 4),
+                child: const Text('Settings'),
+              ),
               FloatingActionButton(
-                  onPressed: () => _changePage(context, 5),
-                  child: const Icon(Icons.add)),
+                onPressed: () => _changePage(context, 5),
+                child: const Icon(Icons.add),
+              ),
               ElevatedButton(
-                  onPressed: () => _changePage(context, 6),
-                  child: const Text('Profile')),
+                onPressed: () => _changePage(context, 6),
+                child: const Text('Profile'),
+              ),
             ],
           ),
         );

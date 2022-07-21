@@ -1,10 +1,11 @@
-import 'dart:developer';
+import 'dart:developer' show log;
 
-import 'package:bloc/bloc.dart';
-import 'package:credentials_management/src/common/utils.dart';
-import 'package:credentials_management/src/models/credentials.dart';
-import 'package:credentials_management/src/services/repositories/credentials_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../common/utils.dart' as utils;
+import '../../models/credentials.dart';
+import '../../services/repositories/credentials_repository.dart';
 
 part 'credentials_state.dart';
 
@@ -13,7 +14,7 @@ class CredentialsCubit extends Cubit<CredentialsState> {
   final CredentialsRepository credentialsRepository;
   Future<void> createCredentials(Credentials credential) async {
     emit(AddCredentialInProgress());
-    final icon = await Utils.getCompanyLogo(credential.email);
+    final icon = await utils.getCompanyLogo(credential.email);
     credential.icon = icon;
     credentialsRepository.add(credential).then((index) {
       emit(CredentialsAdded());

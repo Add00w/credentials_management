@@ -1,18 +1,20 @@
+import 'dart:async';
 import 'dart:developer';
 
-import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
-import 'package:credentials_management/src/blocs/credentials/credentials_cubit.dart';
-import 'package:credentials_management/src/blocs/login/login_cubit.dart';
-import 'package:credentials_management/src/models/credentials.dart';
-import 'package:credentials_management/src/services/repositories/credentials_repository.dart';
-import 'package:credentials_management/src/services/repositories/user_repository.dart';
-import 'package:credentials_management/src/ui/screens/login_screen.dart';
-import 'package:credentials_management/src/ui/screens/main_screen.dart';
-import 'package:credentials_management/src/ui/widgets/circular_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+
+import 'src/blocs/auth/auth_bloc.dart';
+import 'src/blocs/credentials/credentials_cubit.dart';
+import 'src/blocs/login/login_cubit.dart';
+import 'src/models/credentials.dart';
+import 'src/services/repositories/credentials_repository.dart';
+import 'src/services/repositories/user_repository.dart';
+import 'src/ui/screens/login_screen.dart';
+import 'src/ui/screens/main_screen.dart';
+import 'src/ui/widgets/circular_loading.dart';
 
 class SimpleBlocDelegate extends BlocObserver {
   @override
@@ -54,28 +56,35 @@ class SimpleBlocDelegate extends BlocObserver {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = SimpleBlocDelegate();
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(CredentialsAdapter());
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => AuthenticationBloc()..add(AppStarted()),
+  runZonedGuarded(
+    () async {
+      await BlocOverrides.runZoned(
+        () async => runApp(
+          MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => AuthenticationBloc()..add(AppStarted()),
+              ),
+              BlocProvider(
+                create: (context) => CredentialsCubit(CredentialsRepository()),
+              ),
+            ],
+            child: MultiRepositoryProvider(
+              providers: [
+                RepositoryProvider(create: (context) => UserRepository()),
+                // RepositoryProvider.value(value: _credentialsRepo),
+              ],
+              child: CredentialsManagementApp(),
+            ),
+          ),
         ),
-        BlocProvider(
-          create: (context) => CredentialsCubit(CredentialsRepository()),
-        ),
-      ],
-      child: MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider(create: (context) => UserRepository()),
-          // RepositoryProvider.value(value: _credentialsRepo),
-        ],
-        child: CredentialsManagementApp(),
-      ),
-    ),
+        blocObserver: SimpleBlocDelegate(),
+      );
+    },
+    (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );
 }
 

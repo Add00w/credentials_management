@@ -1,6 +1,6 @@
 import 'package:credentials_management/src/blocs/credentials/credentials_cubit.dart';
 import 'package:credentials_management/src/blocs/shared/main_screen_cubit.dart';
-import 'package:credentials_management/src/common/utils.dart';
+import 'package:credentials_management/src/common/utils.dart' as utils;
 import 'package:credentials_management/src/models/credentials.dart';
 import 'package:credentials_management/src/ui/widgets/app_textfield.dart';
 import 'package:credentials_management/src/ui/widgets/circular_loading.dart';
@@ -47,22 +47,22 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
                 AppTextField(
                   controller: _emailController,
                   hint: 'Email',
-                  validator: Utils.isEmail,
+                  validator: utils.isEmail,
                 ),
                 AppTextField(
                   controller: _usernameController,
                   hint: 'Username',
-                  validator: Utils.isNotEmpty,
+                  validator: utils.isNotEmpty,
                 ),
                 AppTextField(
                   controller: _brandNameController,
                   hint: 'Brand name',
-                  validator: Utils.isNotEmpty,
+                  validator: utils.isNotEmpty,
                 ),
                 AppTextField(
                   controller: _passwordController,
                   hint: 'Password',
-                  validator: Utils.isNotEmpty,
+                  validator: utils.isNotEmpty,
                 ),
                 BlocConsumer<CredentialsCubit, CredentialsState>(
                   builder: (context, state) {

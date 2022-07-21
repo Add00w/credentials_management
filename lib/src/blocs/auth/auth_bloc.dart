@@ -1,40 +1,33 @@
-import 'dart:async';
-
-import 'package:bloc/bloc.dart';
-import 'package:credentials_management/src/services/repositories/secure_storage_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../services/repositories/secure_storage_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthenticationBloc extends Bloc<AuthEvent, AuthState> {
+  final SecureStorageRepository secureStorageRepo;
+
   AuthenticationBloc()
       : secureStorageRepo = SecureStorageRepository(),
-        super(AuthInitial());
-  final SecureStorageRepository secureStorageRepo;
-  @override
-  Stream<AuthState> mapEventToState(
-    AuthEvent event,
-  ) async* {
-    // app start
-    if (event is AppStarted) {
+        super(AuthInitial()) {
+    on<AppStarted>((event, emit) async {
       final token = await secureStorageRepo.getToken();
       if (token.isNotEmpty) {
-        yield Authenticated();
+        emit(Authenticated());
       } else {
-        yield Unauthenticated();
+        emit(Unauthenticated());
       }
-    }
-
-    if (event is LoggedIn) {
+    });
+    on<LoggedIn>((event, emit) async {
       await secureStorageRepo.saveToken(event.token);
-      yield Authenticated();
-    }
-
-    if (event is LoggedOut) {
+      emit(Authenticated());
+    });
+    on<LoggedOut>((event, emit) async {
       await secureStorageRepo.deleteToken();
-      yield Unauthenticated();
-    }
+      emit(Unauthenticated());
+    });
   }
 }

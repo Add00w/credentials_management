@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:developer' show log;
 
 import 'package:credentials_management/src/models/credentials.dart';
 import 'package:credentials_management/src/models/favicon.dart';
@@ -42,17 +42,21 @@ class CredentialsRepository {
   Future<String> _getBestFavicon(String url) async {
     try {
       final response = await http.get(
-        Uri.tryParse('https://i.olsh.me/allicons.json?'
-            'url=$url&formats=png,ico,gif')!,
+        Uri.tryParse(
+          'https://i.olsh.me/allicons.json?'
+          'url=$url&formats=png,ico,gif',
+        )!,
       );
 
       if (response.statusCode != 200) {
         return '';
       }
 
-      final bestIcon = FaviconResponse.fromJson(json.decode(
-        response.body,
-      ) as Map<String, dynamic>);
+      final bestIcon = FaviconResponse.fromJson(
+        json.decode(
+          response.body,
+        ) as Map<String, dynamic>,
+      );
 
       return bestIcon.url;
     } catch (e) {

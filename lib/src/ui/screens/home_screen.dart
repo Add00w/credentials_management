@@ -1,4 +1,3 @@
-import 'package:credentials_management/src/ui/widgets/credentials_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -64,11 +63,12 @@ class HomeScreen extends StatelessWidget {
                   ..rotateX(-0.005)
                   ..rotateY(-0.5),
                 width: MediaQuery.of(context).size.width * 0.3,
-                height: 70,
+                height: 80,
                 color: Colors.brown,
-                child:
-                    const Text('You will get these advantages when using this '
-                        'app.'),
+                child: const Text(
+                  'You will get these advantages when using this '
+                  'app.',
+                ),
               ),
             ),
           ),
@@ -95,13 +95,14 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _ServicesWidget extends StatelessWidget {
-  const _ServicesWidget(
-      {Key? key,
-      required this.title,
-      required this.description,
-      required this.icon})
-      : super(key: key);
-  final String title, description;
+  const _ServicesWidget({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.icon,
+  }) : super(key: key);
+  final String title;
+  final String description;
   final IconData icon;
 
   @override

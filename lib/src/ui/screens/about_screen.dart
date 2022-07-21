@@ -1,4 +1,3 @@
-import 'package:credentials_management/src/ui/widgets/credentials_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -6,7 +5,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body:  Center(
+      body: Center(
         child: Text(
           'data',
           style: TextStyle(

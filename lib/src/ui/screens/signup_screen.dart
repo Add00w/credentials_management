@@ -1,5 +1,5 @@
 import 'package:credentials_management/src/blocs/signup/signup_cubit.dart';
-import 'package:credentials_management/src/common/utils.dart';
+import 'package:credentials_management/src/common/utils.dart' as utils;
 import 'package:credentials_management/src/ui/widgets/app_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,18 +40,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   AppTextField(
                     controller: _nameController,
                     hint: 'Name',
-                    validator: Utils.isNotEmpty,
+                    validator: utils.isNotEmpty,
                   ),
                   AppTextField(
                     controller: _emailController,
                     hint: 'Email',
-                    validator: Utils.isEmail,
+                    validator: utils.isEmail,
                     keyboard: TextInputType.emailAddress,
                   ),
                   AppTextField(
                     controller: _passwordController,
                     hint: 'Password',
-                    validator: Utils.isNotEmpty,
+                    validator: utils.isNotEmpty,
                     keyboard: TextInputType.visiblePassword,
                     isPassword: true,
                   ),

@@ -10,7 +10,7 @@ class FaviconResponse {
   factory FaviconResponse.fromJson(Map<String, dynamic> json) {
     return FaviconResponse(
       url: json['url'] as String,
-      icon: json['icons'] != null ? json['icons'][0] as String : '',
+      icon: json['icons'] != null ? (json['icons'] as List<String>)[0] : '',
     );
   }
 

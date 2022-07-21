@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:credentials_management/src/blocs/auth/auth_bloc.dart';
 import 'package:credentials_management/src/blocs/login/login_cubit.dart';
 import 'package:credentials_management/src/blocs/signup/signup_cubit.dart';
-import 'package:credentials_management/src/common/utils.dart';
+import 'package:credentials_management/src/common/utils.dart' as utils;
 import 'package:credentials_management/src/services/repositories/user_repository.dart';
 import 'package:credentials_management/src/ui/screens/signup_screen.dart';
 import 'package:credentials_management/src/ui/widgets/app_textfield.dart';
@@ -41,13 +41,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   AppTextField(
                     controller: _emailController,
                     hint: 'Email',
-                    validator: Utils.isEmail,
+                    validator: utils.isEmail,
                     keyboard: TextInputType.emailAddress,
                   ),
                   AppTextField(
                     controller: _passwordController,
                     hint: 'Password',
-                    validator: Utils.isNotEmpty,
+                    validator: utils.isNotEmpty,
                     keyboard: TextInputType.visiblePassword,
                     isPassword: true,
                   ),
@@ -137,7 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void _validateAndLogin() {
     if (_formKey.currentState!.validate()) {
       context.read<LoginCubit>().loginWithEmailAndPassword(
-          _emailController.text, _passwordController.text);
+            _emailController.text,
+            _passwordController.text,
+          );
     }
   }
 
@@ -148,6 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     log(didAuthenticate.toString());
     if (didAuthenticate) {
+      if (!mounted) return;
       context
           .read<LoginCubit>()
           .loginWithFingerprint(authenticated: didAuthenticate);
@@ -157,13 +160,14 @@ class _LoginScreenState extends State<LoginScreen> {
   void _signUp() {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (_) => BlocProvider<SignUpCubit>(
-                create: (_) => SignUpCubit(
-                  authenticationBloc: context.read<AuthenticationBloc>(),
-                  userRepository: context.read<UserRepository>(),
-                ),
-                child: SignUpScreen(),
-              )),
+        builder: (_) => BlocProvider<SignUpCubit>(
+          create: (_) => SignUpCubit(
+            authenticationBloc: context.read<AuthenticationBloc>(),
+            userRepository: context.read<UserRepository>(),
+          ),
+          child: SignUpScreen(),
+        ),
+      ),
     );
   }
 

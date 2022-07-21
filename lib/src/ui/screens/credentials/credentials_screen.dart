@@ -21,8 +21,10 @@ class _CredentialsState extends State<CredentialsScreen> {
                   itemCount: state.credentials.length,
                   itemBuilder: (_, index) {
                     return CredentialWidget(
-                        credential: state.credentials[index]);
-                  })
+                      credential: state.credentials[index],
+                    );
+                  },
+                )
               : CircularLoading();
         },
       ),
