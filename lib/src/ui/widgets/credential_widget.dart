@@ -10,11 +10,16 @@ class CredentialWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       dense: true,
-      leading: Hero(
-        tag: 'logo',
-        child: Text(
-          credential.brandName.characters.first,
-          style: const TextStyle(color: Colors.red),
+      leading: SizedBox(
+        width: 20,
+        height: 20,
+        child: Hero(
+          tag: 'logo',
+          child: Image.network(
+            credential.icon!,
+            width: 20,
+            height: 20,
+          ),
         ),
       ),
       title: Text(credential.email),
