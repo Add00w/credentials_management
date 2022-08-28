@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:developer' show log;
 
-import 'package:credentials_management/src/models/credentials.dart';
-import 'package:credentials_management/src/models/favicon.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
+
+import '../../models/credentials.dart';
 
 class CredentialsRepository {
   late Box credentialsBox;
@@ -39,26 +37,11 @@ class CredentialsRepository {
     return Hive.box<Credentials>('credentials').values.toList();
   }
 
-  Future<String> _getBestFavicon(String url) async {
+  Future<String> _getBestFavicon(String domain) async {
     try {
-      final response = await http.get(
-        Uri.tryParse(
-          'https://i.olsh.me/allicons.json?'
-          'url=$url&formats=png,ico,gif',
-        )!,
-      );
-
-      if (response.statusCode != 200) {
-        return '';
-      }
-
-      final bestIcon = FaviconResponse.fromJson(
-        json.decode(
-          response.body,
-        ) as Map<String, dynamic>,
-      );
-
-      return bestIcon.url;
+      final favIcon =
+          'https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://$domain.com&size=16';
+      return favIcon;
     } catch (e) {
       debugPrint(e.toString());
 
