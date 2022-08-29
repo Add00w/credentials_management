@@ -1,20 +1,22 @@
-import 'dart:async';
-import 'dart:developer';
+import 'dart:async' show runZonedGuarded;
+import 'dart:developer' show log;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
-import 'src/blocs/auth/auth_bloc.dart';
-import 'src/blocs/credentials/credentials_cubit.dart';
-import 'src/blocs/login/login_cubit.dart';
-import 'src/models/credentials.dart';
-import 'src/services/repositories/credentials_repository.dart';
-import 'src/services/repositories/user_repository.dart';
-import 'src/ui/screens/login_screen.dart';
-import 'src/ui/screens/main_screen.dart';
-import 'src/ui/widgets/circular_loading.dart';
+import './common/widgets/circular_loading.dart';
+import './features/auth/bloc/auth_bloc.dart';
+import './features/auth/bloc/login_cubit.dart';
+import './features/auth/repository/user_repository.dart';
+import './features/auth/screens/login_screen.dart';
+import './features/credentials/bloc/credentials_cubit.dart';
+import './features/credentials/model/credentials.dart';
+import './features/credentials/repository/credentials_repository.dart';
+import './features/main/main_cubit.dart';
+import './features/main/main_screen.dart';
+import './features/main/widgets/drawer_icon.dart';
 
 class SimpleBlocDelegate extends BlocObserver {
   @override
@@ -71,11 +73,16 @@ Future<void> main() async {
               BlocProvider(
                 create: (context) => CredentialsCubit(CredentialsRepository()),
               ),
+              BlocProvider(
+                create: (context) => MainScreenCubit(),
+              ),
+              BlocProvider(
+                create: (context) => DrawerIconCubit(),
+              ),
             ],
             child: MultiRepositoryProvider(
               providers: [
                 RepositoryProvider(create: (context) => UserRepository()),
-                // RepositoryProvider.value(value: _credentialsRepo),
               ],
               child: CredentialsManagementApp(),
             ),
