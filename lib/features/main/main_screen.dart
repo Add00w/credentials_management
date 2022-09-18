@@ -21,6 +21,15 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
+  final _screens = const [
+    HomeScreen(),
+    CredentialsScreen(),
+    ContactUsScreen(),
+    AboutScreen(),
+    SettingsScreen(),
+    CreateCredentialsScreen(),
+    ProfileScreen(),
+  ];
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -48,21 +57,10 @@ class _MainScreenState extends State<MainScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Stack(
-                    children: [
-                      IndexedStack(
-                        index: selectedPage,
-                        children: const [
-                          HomeScreen(),
-                          CredentialsScreen(),
-                          ContactUsScreen(),
-                          AboutScreen(),
-                          SettingsScreen(),
-                          CreateCredentialsScreen(),
-                          ProfileScreen(),
-                        ],
-                      ),
-                    ],
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 600),
+                    switchOutCurve: Curves.elasticOut,
+                    child: _screens[selectedPage],
                   ),
                 ),
               ],
