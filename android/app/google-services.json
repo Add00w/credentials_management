@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "981134640599",
+    "project_id": "credentials-0",
+    "storage_bucket": "credentials-0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981134640599:android:a55118f771dc0e451eb792",
+        "android_client_info": {
+          "package_name": "com.addow.credentials_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981134640599-qe64qfscbpkvigei476vhb1s2urhfk0d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.addow.credentials_management",
+            "certificate_hash": "336717e672016ec35825bf33aff44640da2cf448"
+          }
+        },
+        {
+          "client_id": "981134640599-0mskoh3ad7f83lk8uhbqpqanto02lkiq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4kpk2vMUBa-xO47n9la7ErmHJJkbXR_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981134640599-0mskoh3ad7f83lk8uhbqpqanto02lkiq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "981134640599-sb4ipf1mduu11jof47mq258il43hdr8t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.addow.credentialsManagement"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

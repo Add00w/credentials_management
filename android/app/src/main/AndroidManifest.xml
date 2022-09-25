@@ -2,8 +2,11 @@
     package="com.addow.credentials_management">
     <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
    <application
+        android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:label="credentials_management"
         android:icon="@mipmap/ic_launcher">
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
