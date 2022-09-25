@@ -1,39 +1,37 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer' show log;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 
 import '../model/credentials.dart';
 
 class CredentialsRepository {
-  late Box credentialsBox;
+  late Box<Credentials> encryptedCredentialsBox;
   CredentialsRepository() {
-    _openBox();
+    if (!Hive.isBoxOpen('credentials')) {
+      _openBox();
+    }
   }
   Future<int> add(Credentials credential) async {
-    final credentials = Hive.box<Credentials>('credentials');
-    final icon = await _getBestFavicon(credential.brandName);
+    final icon = await _getBestFavicon(credential.brand);
     log('icon:$icon');
     credential.icon = icon;
-    final index = await credentials.add(credential);
-    return index;
+    return encryptedCredentialsBox.add(credential);
   }
 
   Future<void> edit(Credentials credential, int index) async {
-    final credentials = Hive.box<Credentials>('credentials');
-    credentials.putAt(index, credential);
+    return encryptedCredentialsBox.putAt(index, credential);
   }
 
   Future<void> delete(int index) async {
-    await Hive.box<Credentials>('credentials').deleteAt(index);
+    return encryptedCredentialsBox.deleteAt(index);
   }
 
   Future<List<Credentials>> getCredentials() async {
-    log('credentials');
-    if (!Hive.isBoxOpen('credentials')) {
-      await _openBox();
-    }
-    return Hive.box<Credentials>('credentials').values.toList();
+    return encryptedCredentialsBox.values.toList();
   }
 
   Future<String> _getBestFavicon(String domain) async {
@@ -49,6 +47,29 @@ class CredentialsRepository {
   }
 
   Future<void> _openBox() async {
-    credentialsBox = await Hive.openBox<Credentials>('credentials');
+    final encryptionKey = await _getEncryptionKey();
+    Hive.openBox<Credentials>(
+      'credentials',
+      encryptionCipher: HiveAesCipher(encryptionKey),
+    ).then(
+      (box) {
+        encryptedCredentialsBox = box;
+        log('data:${encryptedCredentialsBox.get(0)}');
+      },
+    );
+  }
+
+  Future<List<int>> _getEncryptionKey() async {
+    const secureStorage = FlutterSecureStorage();
+    final encryptionKey = await secureStorage.read(key: 'encryptionKey');
+    if (encryptionKey == null) {
+      final encryptionKey = Hive.generateSecureKey();
+      await secureStorage.write(
+        key: 'encryptionKey',
+        value: base64UrlEncode(encryptionKey),
+      );
+      return encryptionKey;
+    }
+    return base64Url.decode(encryptionKey);
   }
 }

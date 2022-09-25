@@ -15,24 +15,12 @@ class LoginCubit extends Cubit<LoginState> {
 
   final UserRepository userRepository;
   final AuthenticationBloc authenticationBloc;
-
-  Future<void> loginWithEmailAndPassword(
-    final String email,
-    final String password,
-  ) async {
+  Future<void> loginWithGoogle() async {
     emit(LoginIsInProgress());
     try {
-      final token = await userRepository.signIn(
-        email: email,
-        password: password,
-      );
-      authenticationBloc.add(LoggedIn(token));
-    } catch (error) {
+      await userRepository.signInWithGoogle();
+    } on Exception catch (error) {
       emit(LoginFailed(message: error.toString()));
     }
-  }
-
-  void loginWithFingerprint({required final bool authenticated}) {
-    authenticationBloc.add(LoggedIn('$authenticated'));
   }
 }

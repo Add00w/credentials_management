@@ -2,20 +2,21 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SecureStorageService {
   late final _secureStorage = const FlutterSecureStorage();
+  late final _userKey = 'user';
 
   /// delete from keystore/keychain
-  Future<void> deleteToken() async {
-    await _secureStorage.delete(key: 'access_token');
+  Future<void> deleteUser() async {
+    await _secureStorage.delete(key: _userKey);
   }
 
   /// write to keystore/keychain
-  Future<void> saveToken(String token) async {
-    _secureStorage.write(key: 'access_token', value: token);
+  Future<void> saveUser(String user) async {
+    _secureStorage.write(key: _userKey, value: user);
   }
 
   /// read to keystore/keychain
-  Future<String> getToken() async {
-    final token = await _secureStorage.read(key: 'access_token') ?? '';
+  Future<String> getUser() async {
+    final token = await _secureStorage.read(key: _userKey) ?? '';
     return token;
   }
 }

@@ -1,6 +1,6 @@
-import 'dart:async' show runZonedGuarded;
 import 'dart:developer' show log;
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -17,6 +17,8 @@ import './features/credentials/repository/credentials_repository.dart';
 import './features/main/main_cubit.dart';
 import './features/main/main_screen.dart';
 import './features/main/widgets/drawer_icon.dart';
+import './features/profile/cubit/profile_cubit.dart';
+import './firebase_options.dart';
 
 class SimpleBlocDelegate extends BlocObserver {
   @override
@@ -58,41 +60,41 @@ class SimpleBlocDelegate extends BlocObserver {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(CredentialsAdapter());
-  runZonedGuarded(
-    () async {
-      await BlocOverrides.runZoned(
-        () async => runApp(
-          MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => AuthenticationBloc()..add(AppStarted()),
-              ),
-              BlocProvider(
-                create: (context) => CredentialsCubit(CredentialsRepository()),
-              ),
-              BlocProvider(
-                create: (context) => MainScreenCubit(),
-              ),
-              BlocProvider(
-                create: (context) => DrawerIconCubit(),
-              ),
-            ],
-            child: MultiRepositoryProvider(
-              providers: [
-                RepositoryProvider(create: (context) => UserRepository()),
-              ],
-              child: CredentialsManagementApp(),
-            ),
-          ),
+  final userRepo = UserRepository();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              AuthenticationBloc(userRepository: userRepo)..add(AppStarted()),
         ),
-        blocObserver: SimpleBlocDelegate(),
-      );
-    },
-    (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
+        BlocProvider(
+          create: (context) => CredentialsCubit(CredentialsRepository()),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (context) => MainScreenCubit(),
+        ),
+        BlocProvider(
+          create: (context) => DrawerIconCubit(),
+        ),
+      ],
+      child: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider.value(value: userRepo),
+        ],
+        child: CredentialsManagementApp(),
+      ),
+    ),
   );
+  Bloc.observer = SimpleBlocDelegate();
 }
 
 class CredentialsManagementApp extends StatelessWidget {
@@ -112,13 +114,18 @@ class CredentialsManagementApp extends StatelessWidget {
           builder: (context, state) => state is AuthInitial
               ? CircularLoading()
               : state is Authenticated
-                  ? MainScreen()
+                  ? BlocProvider(
+                      create: (context) => ProfileCubit(
+                        authenticationBloc: context.read<AuthenticationBloc>(),
+                      )..profile(),
+                      child: MainScreen(),
+                    )
                   : BlocProvider<LoginCubit>(
                       create: (context) => LoginCubit(
                         authenticationBloc: context.read<AuthenticationBloc>(),
                         userRepository: context.read<UserRepository>(),
                       ),
-                      child: LoginScreen(),
+                      child: const LoginScreen(),
                     ),
         ),
       ),

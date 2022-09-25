@@ -50,12 +50,14 @@ class CredentialsDrawer extends StatelessWidget {
                         icon: Icons.info,
                         onTap: () => _goToPage(context, 3),
                       ),
+                      const AboutListTile(),
                       CredentialsDrawerItem(
                         selected: false,
                         title: 'Logout',
                         icon: Icons.logout,
                         onTap: () {
                           context.read<AuthenticationBloc>().add(LoggedOut());
+                          Navigator.maybePop(context);
                         },
                       ),
                     ],

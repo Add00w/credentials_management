@@ -17,19 +17,17 @@ class CreateCredentialsScreen extends StatefulWidget {
 }
 
 class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
-  final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _usernameEmailController =
+      TextEditingController();
   final TextEditingController _brandNameController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    _emailController.dispose();
     _passwordController.dispose();
-    _usernameController.dispose();
+    _usernameEmailController.dispose();
     _brandNameController.dispose();
     super.dispose();
   }
@@ -46,18 +44,13 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
             child: Column(
               children: [
                 AppTextField(
-                  controller: _emailController,
-                  hint: 'Email',
-                  validator: utils.isEmail,
-                ),
-                AppTextField(
-                  controller: _usernameController,
-                  hint: 'Username',
+                  controller: _usernameEmailController,
+                  hint: 'Username/Email',
                   validator: utils.isNotEmpty,
                 ),
                 AppTextField(
                   controller: _brandNameController,
-                  hint: 'Brand name',
+                  hint: 'Brand',
                   validator: utils.isNotEmpty,
                 ),
                 AppTextField(
@@ -78,8 +71,7 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
                                     .createCredentials(
                                       Credentials(
                                         _brandNameController.text,
-                                        _usernameController.text,
-                                        _emailController.text,
+                                        _usernameEmailController.text,
                                         _passwordController.text,
                                         null,
                                       ),

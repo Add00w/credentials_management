@@ -18,8 +18,7 @@ class CredentialsAdapter extends TypeAdapter<Credentials> {
     };
     return Credentials(
       fields[0] as String,
-      fields[1] as String?,
-      fields[2] as String,
+      fields[1] as String,
       fields[3] as String,
       fields[4] as String?,
     );
@@ -28,13 +27,11 @@ class CredentialsAdapter extends TypeAdapter<Credentials> {
   @override
   void write(BinaryWriter writer, Credentials obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.brandName)
+      ..write(obj.brand)
       ..writeByte(1)
-      ..write(obj.userName)
-      ..writeByte(2)
-      ..write(obj.email)
+      ..write(obj.userNameOrEmail)
       ..writeByte(3)
       ..write(obj.password)
       ..writeByte(4)

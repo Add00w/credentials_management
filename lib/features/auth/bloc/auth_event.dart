@@ -8,13 +8,4 @@ abstract class AuthEvent extends Equatable {
 
 class AppStarted extends AuthEvent {}
 
-class LoggedIn extends AuthEvent {
-  final String token;
-
-  LoggedIn(this.token);
-
-  @override
-  List<Object> get props => [token];
-}
-
 class LoggedOut extends AuthEvent {}

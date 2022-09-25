@@ -11,7 +11,8 @@ part 'credentials_state.dart';
 class CredentialsCubit extends Cubit<CredentialsState> {
   CredentialsCubit(this.credentialsRepository) : super(CredentialsInitial());
   final CredentialsRepository credentialsRepository;
-  Future<void> createCredentials(Credentials credential) async {
+
+  void createCredentials(Credentials credential) {
     emit(AddCredentialInProgress());
     credentialsRepository.add(credential).then((index) {
       log('current added index:$index');
@@ -19,7 +20,7 @@ class CredentialsCubit extends Cubit<CredentialsState> {
     });
   }
 
-  Future<void> getCredentials() async {
+  void getCredentials() {
     if (state is! CredentialsLoaded) {
       emit(CredentialsLoading());
       try {

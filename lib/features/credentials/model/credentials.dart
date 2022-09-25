@@ -5,20 +5,19 @@ part 'credentials.g.dart';
 @HiveType(typeId: 1)
 class Credentials extends HiveObject {
   Credentials(
-    this.brandName,
-    this.userName,
-    this.email,
+    this.brand,
+    this.userNameOrEmail,
     this.password,
     this.icon,
   );
   @HiveField(0)
-  final String brandName;
+  final String brand;
 
   @HiveField(1)
-  final String? userName;
+  final String userNameOrEmail;
 
-  @HiveField(2)
-  final String email;
+  //I removed email field with index 2
+
   @HiveField(3)
   final String password;
   @HiveField(4)
