@@ -122,7 +122,6 @@ class CredentialsManagementApp extends StatelessWidget {
                     )
                   : BlocProvider<LoginCubit>(
                       create: (context) => LoginCubit(
-                        authenticationBloc: context.read<AuthenticationBloc>(),
                         userRepository: context.read<UserRepository>(),
                       ),
                       child: const LoginScreen(),
