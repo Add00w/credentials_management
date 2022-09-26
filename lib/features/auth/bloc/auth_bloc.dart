@@ -23,8 +23,9 @@ class AuthenticationBloc extends Bloc<AuthEvent, AuthState> {
       }
       await emit.forEach(
         FirebaseAuth.instance.idTokenChanges(),
-        onData: (user) =>
-            user == null ? Unauthenticated() : Authenticated(user as User),
+        onData: (user) {
+          return user == null ? Unauthenticated() : Authenticated(user as User);
+        },
       );
     });
 
