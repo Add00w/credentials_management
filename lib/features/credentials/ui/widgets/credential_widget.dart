@@ -18,17 +18,13 @@ class CredentialWidget extends StatelessWidget {
         padding: const EdgeInsets.only(left: 8.0),
         child: Row(
           children: [
-            SizedBox(
+            Image.network(
+              credential.icon!,
               width: 20,
               height: 20,
-              child: Hero(
-                tag: 'logo',
-                child: Image.network(
-                  credential.icon!,
-                  width: 20,
-                  height: 20,
-                ),
-              ),
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.warning_amber_outlined);
+              },
             ),
             const SizedBox(width: 4.0),
             Flexible(
@@ -54,7 +50,7 @@ class CredentialWidget extends StatelessWidget {
             Flexible(
               flex: 3,
               child: BlocProvider(
-                create: (context) => ShowHidePasswordCubit(),
+                create: (context) => ObescureCubit(),
                 child: PasswordWidget(
                   password: credential.password,
                 ),
@@ -77,7 +73,7 @@ class PasswordWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final obscure = context.watch<ShowHidePasswordCubit>().state;
+    final obscure = context.watch<ObescureCubit>().state;
     return Row(
       children: [
         Flexible(
@@ -88,28 +84,32 @@ class PasswordWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
             decoration: const InputDecoration(
-              border: UnderlineInputBorder(borderSide: BorderSide.none),
+              border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(vertical: 12),
             ),
             obscureText: obscure,
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            context.read<ShowHidePasswordCubit>().togleVisibility();
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: Icon(
-              obscure ? Icons.visibility_off : Icons.visibility,
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              context.read<ObescureCubit>().togleVisibility();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Icon(
+                obscure ? Icons.visibility_off : Icons.visibility,
+              ),
             ),
           ),
         ),
-        GestureDetector(
-          onTap: () {},
-          child: const Padding(
-            padding: EdgeInsets.only(left: 12),
-            child: Icon(Icons.copy),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {},
+            child: const Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Icon(Icons.copy),
+            ),
           ),
         ),
       ],
@@ -117,8 +117,8 @@ class PasswordWidget extends StatelessWidget {
   }
 }
 
-class ShowHidePasswordCubit extends Cubit<bool> {
-  ShowHidePasswordCubit() : super(true);
+class ObescureCubit extends Cubit<bool> {
+  ObescureCubit() : super(true);
   void togleVisibility() {
     emit(!state);
   }
