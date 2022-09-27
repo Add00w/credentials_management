@@ -7,9 +7,10 @@ class Credentials extends HiveObject {
   Credentials(
     this.brand,
     this.userNameOrEmail,
-    this.password,
+    this.password, {
     this.icon,
-  );
+    this.synced = false,
+  });
   @HiveField(0)
   final String brand;
 
@@ -23,4 +24,7 @@ class Credentials extends HiveObject {
   @HiveField(4)
   String? icon;
   //I removed final keyword from icon
+
+  @HiveField(6, defaultValue: false)
+  bool synced;
 }

@@ -73,7 +73,6 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
                                         _brandNameController.text,
                                         _usernameEmailController.text,
                                         _passwordController.text,
-                                        null,
                                       ),
                                     );
                               }

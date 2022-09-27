@@ -15,12 +15,6 @@ class AuthenticationBloc extends Bloc<AuthEvent, AuthState> {
     required this.userRepository,
   }) : super(AuthInitial()) {
     on<AppStarted>((event, emit) async {
-      final currentUser = userRepository.currentUser;
-      if (currentUser == null) {
-        emit(Unauthenticated());
-      } else {
-        emit(Authenticated(currentUser));
-      }
       await emit.forEach(
         FirebaseAuth.instance.idTokenChanges(),
         onData: (user) {

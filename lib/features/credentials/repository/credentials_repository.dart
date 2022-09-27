@@ -1,24 +1,48 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer' show log;
+import 'dart:convert' show base64UrlEncode, base64Url;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 
+import '../../../common/services/connectivity_service.dart';
+import '../../../common/services/secure_storage_service.dart';
 import '../model/credentials.dart';
 
 class CredentialsRepository {
-  late Box<Credentials> encryptedCredentialsBox;
-  CredentialsRepository() {
+  static late Box<Credentials> encryptedCredentialsBox;
+  static late final _credentialsFirestore =
+      FirebaseFirestore.instance.collection('credentials');
+  CredentialsRepository(
+    this._secureStorage,
+  ) {
     if (!Hive.isBoxOpen('credentials')) {
       _openBox();
     }
   }
+  final SecureStorageService _secureStorage;
   Future<int> add(Credentials credential) async {
     final icon = await _getBestFavicon(credential.brand);
-    log('icon:$icon');
     credential.icon = icon;
+    if (await ConnectivityService.isConnected()) {
+      final credentialSync = <String, String>{
+        'brand': credential.brand,
+        'icon': credential.icon!,
+        'password': credential.password,
+        'username_or_email': credential.userNameOrEmail,
+      };
+      try {
+        _credentialsFirestore.add(credentialSync).then(
+          (doc) {
+            // Set synced
+            credential.synced = true;
+          },
+        );
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+    }
     return encryptedCredentialsBox.add(credential);
   }
 
@@ -31,7 +55,56 @@ class CredentialsRepository {
   }
 
   Future<List<Credentials>> getCredentials() async {
+    if (encryptedCredentialsBox.values.isEmpty) {
+      // If local storage is empty
+      // Try to get the credentials from firestore
+      // and store to local
+      await _credentialsFirestore.get().then(
+        (event) async {
+          for (final doc in event.docs) {
+            debugPrint("${doc.id} => ${doc.data()}");
+            final credential = Credentials(
+              doc.data()['brand'] as String,
+              doc.data()['username_or_email'] as String,
+              doc.data()['password'] as String,
+              icon: doc.data()['icon'] as String,
+              synced: true,
+            );
+            await encryptedCredentialsBox.add(credential);
+          }
+        },
+      );
+    }
     return encryptedCredentialsBox.values.toList();
+  }
+
+  static Future<void> syncTheData(ConnectivityResult? status) async {
+    if (await ConnectivityService.isConnected(connectivityResult: status)) {
+      //check if everything is in sync
+      if (_notSynced()) {
+        for (final credential in encryptedCredentialsBox.values) {
+          if (!credential.synced) {
+            final credentialSync = <String, String>{
+              'brand': credential.brand,
+              'icon': credential.icon!,
+              'password': credential.password,
+              'username_or_email': credential.userNameOrEmail,
+            };
+            _credentialsFirestore.add(credentialSync).then(
+              (doc) async {
+                // Set synced
+                credential.synced = true;
+                await credential.save();
+              },
+            );
+          }
+        }
+      }
+    }
+  }
+
+  static bool _notSynced() {
+    return encryptedCredentialsBox.values.any((element) => !element.synced);
   }
 
   Future<String> _getBestFavicon(String domain) async {
@@ -54,19 +127,21 @@ class CredentialsRepository {
     ).then(
       (box) {
         encryptedCredentialsBox = box;
-        log('data:${encryptedCredentialsBox.get(0)}');
+        //initiate connectivity service
+        ConnectivityService();
+        // Check everything in sync.
+        syncTheData(null);
       },
     );
   }
 
   Future<List<int>> _getEncryptionKey() async {
-    const secureStorage = FlutterSecureStorage();
-    final encryptionKey = await secureStorage.read(key: 'encryptionKey');
+    final encryptionKey = await _secureStorage.getFromKey('encryptionKey');
     if (encryptionKey == null) {
       final encryptionKey = Hive.generateSecureKey();
-      await secureStorage.write(
-        key: 'encryptionKey',
-        value: base64UrlEncode(encryptionKey),
+      await _secureStorage.saveToKey(
+        'encryptionKey',
+        base64UrlEncode(encryptionKey),
       );
       return encryptionKey;
     }

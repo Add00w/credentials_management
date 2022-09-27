@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
+import './common/services/secure_storage_service.dart';
 import './common/widgets/circular_loading.dart';
 import './features/auth/bloc/auth_bloc.dart';
 import './features/auth/bloc/login_cubit.dart';
@@ -76,7 +77,8 @@ Future<void> main() async {
               AuthenticationBloc(userRepository: userRepo)..add(AppStarted()),
         ),
         BlocProvider(
-          create: (context) => CredentialsCubit(CredentialsRepository()),
+          create: (context) =>
+              CredentialsCubit(CredentialsRepository(SecureStorageService())),
           lazy: false,
         ),
         BlocProvider(
