@@ -46,17 +46,20 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
                 AppTextField(
                   controller: _usernameEmailController,
                   hint: 'Username/Email',
+                  keyboard: TextInputType.emailAddress,
                   validator: utils.isNotEmpty,
                 ),
                 AppTextField(
                   controller: _brandNameController,
                   hint: 'Brand',
+                  keyboard: TextInputType.name,
                   validator: utils.isNotEmpty,
                 ),
                 AppTextField(
                   controller: _passwordController,
                   hint: 'Password',
                   validator: utils.isNotEmpty,
+                  isPassword: true,
                 ),
                 BlocConsumer<CredentialsCubit, CredentialsState>(
                   builder: (context, state) {
