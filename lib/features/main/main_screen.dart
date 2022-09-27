@@ -10,9 +10,6 @@ import '../credentials/ui/screens/create_credentials_screen.dart';
 import '../credentials/ui/screens/credentials_screen.dart';
 import '../home/screens/home_screen.dart';
 import '../profile/screens/profile_screen.dart';
-import '../settings/screens/about_screen.dart';
-import '../settings/screens/contact_screen.dart';
-import '../settings/screens/settings_screen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -23,12 +20,9 @@ class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
   final _screens = const [
     HomeScreen(),
-    CredentialsScreen(),
-    ContactUsScreen(),
-    AboutScreen(),
-    SettingsScreen(),
     CreateCredentialsScreen(),
     ProfileScreen(),
+    CredentialsScreen(),
   ];
   @override
   Widget build(BuildContext context) {

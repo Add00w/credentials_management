@@ -19,15 +19,15 @@ class BottomNavBar extends StatelessWidget {
         mainAxisSize: isCollapsed ? MainAxisSize.max : MainAxisSize.min,
         children: [
           ElevatedButton(
-            onPressed: () => _goToPage(context, 4),
-            child: const Text('Settings'),
+            onPressed: () => _goToPage(context, 0),
+            child: const Text('Home'),
           ),
           FloatingActionButton(
-            onPressed: () => _goToPage(context, 5),
+            onPressed: () => _goToPage(context, 1),
             child: const Icon(Icons.add),
           ),
           ElevatedButton(
-            onPressed: () => _goToPage(context, 6),
+            onPressed: () => _goToPage(context, 2),
             child: const Text('Profile'),
           ),
         ],

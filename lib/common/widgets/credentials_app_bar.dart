@@ -28,18 +28,11 @@ class CredentialsAppBar extends StatelessWidget {
       case 0:
         return 'Home';
       case 1:
-        return 'Credentials';
-      case 2:
-        return 'Contact Us';
-
-      case 3:
-        return 'About';
-      case 4:
-        return 'Settings';
-      case 5:
         return 'Create Credentials';
-      case 6:
+      case 2:
         return 'Profile';
+      case 3:
+        return 'Credentials';
       default:
         throw RangeError('Out of range');
     }

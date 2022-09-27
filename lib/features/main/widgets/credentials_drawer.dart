@@ -22,35 +22,17 @@ class CredentialsDrawer extends StatelessWidget {
               child: BlocBuilder<MainScreenCubit, int>(
                 builder: (context, index) {
                   return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisSize: MainAxisSize.min,
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       CredentialsDrawerItem(
-                        selected: index == 0,
-                        title: 'home',
-                        icon: Icons.home,
-                        onTap: () => _goToPage(context, 0),
-                      ),
-                      CredentialsDrawerItem(
-                        selected: index == 1,
+                        selected: index == 3,
                         title: 'Credentials',
                         icon: Icons.security,
-                        onTap: () => _goToPage(context, 1),
-                      ),
-                      CredentialsDrawerItem(
-                        selected: index == 2,
-                        title: 'Contact Us',
-                        icon: Icons.contact_mail,
-                        onTap: () => _goToPage(context, 2),
-                      ),
-                      CredentialsDrawerItem(
-                        selected: index == 3,
-                        title: 'About',
-                        icon: Icons.info,
                         onTap: () => _goToPage(context, 3),
                       ),
-                      const AboutListTile(),
+                      const SizedBox(height: 8.0),
                       CredentialsDrawerItem(
                         selected: false,
                         title: 'Logout',
@@ -60,6 +42,8 @@ class CredentialsDrawer extends StatelessWidget {
                           Navigator.maybePop(context);
                         },
                       ),
+                      const Spacer(),
+                      const AboutListTile(),
                     ],
                   );
                 },
