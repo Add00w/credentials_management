@@ -1,16 +1,88 @@
-# credentials_management
+# credentials management
 
-A new Flutter project.
+App for managing your credentials in one place.
 
-## Getting Started
+## Description
 
-This project is a starting point for a Flutter application.
+- Firebase for storing credentials on the cloud.
+- Google login
+- Hive for offline storage
+- connectivity_plus for listening and checking the network
+- Storing the credentials in local when the user is offline and syncing with the cloud data when becomes online again.
+#### Screenshots
 
-A few resources to get you started if this is your first Flutter project:
+<div style="text-align: center">
+<table>
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+<tr>
+ <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Home" src="assets/home.png" />
+    </a>
+   Home
+  </td>
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+   <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Drawer" src="assets/drawer.png" />
+    </a>
+   Drawer
+  </td>
+
+  <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Credentials" src="assets/credentials.png" />
+    </a>
+   Credentials
+  </td>
+</tr>
+
+<tr>
+ <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Create credentials" src="assets/create_credentials.png" />
+    </a>
+   Create credentials
+  </td>
+
+   <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="login" src="assets/login.png" />
+    </a>
+   Login
+  </td>
+
+  <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Login loading" src="assets/loading_login.png" />
+    </a>
+   Login loading
+  </td>
+</tr>
+
+
+<tr>
+ <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Google login dialog" src="assets/choose_google_account_dialog.png" />
+    </a>
+   Google login dialog
+  </td>
+
+   <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Cancel login process" src="assets/cancel_login_process.png" />
+    </a>
+   Cancel login process
+  </td>
+
+  <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Profile" src="assets/profile.png" />
+    </a>
+   Profile
+  </td>
+</tr>
+
+</table>
+</div>
