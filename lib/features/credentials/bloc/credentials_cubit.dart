@@ -15,7 +15,6 @@ class CredentialsCubit extends Cubit<CredentialsState> {
   void createCredentials(Credentials credential) {
     emit(AddCredentialInProgress());
     credentialsRepository.add(credential).then((index) {
-      log('current added index:$index');
       emit(CredentialsAdded());
     });
   }
@@ -25,7 +24,6 @@ class CredentialsCubit extends Cubit<CredentialsState> {
       emit(CredentialsLoading());
       try {
         credentialsRepository.getCredentials().then((credentials) {
-          log('credentials:${credentials.length.toString()}');
           emit(CredentialsLoaded(credentials));
         });
       } catch (e) {

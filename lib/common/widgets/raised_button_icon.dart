@@ -13,14 +13,6 @@ class RaisedButtonIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      // padding: const EdgeInsets.all(8.5),
-      // color: Theme.of(context).colorScheme.primary.withAlpha(110),
-      // Colors.blueGrey.shade200,
-      // shape: const BeveledRectangleBorder(
-      //   borderRadius: BorderRadius.all(
-      //     Radius.circular(5),
-      //   ),
-      // ),
       onPressed: onPressed,
       icon: Icon(icon),
       label: Text(

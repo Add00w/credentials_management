@@ -11,19 +11,14 @@ import '../credentials/ui/screens/credentials_screen.dart';
 import '../home/screens/home_screen.dart';
 import '../profile/screens/profile_screen.dart';
 
-class MainScreen extends StatefulWidget {
-  @override
-  _MainScreenState createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen>
-    with SingleTickerProviderStateMixin {
+class MainScreen extends StatelessWidget {
   final _screens = const [
     HomeScreen(),
     CreateCredentialsScreen(),
     ProfileScreen(),
     CredentialsScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;

@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepository {
-  User? get currentUser => FirebaseAuth.instance.currentUser;
   Future<UserCredential?> signInWithGoogle() async {
     final googleSignIn = GoogleSignIn();
     // Return the current user

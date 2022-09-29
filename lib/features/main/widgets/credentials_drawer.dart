@@ -22,9 +22,6 @@ class CredentialsDrawer extends StatelessWidget {
               child: BlocBuilder<MainScreenCubit, int>(
                 builder: (context, index) {
                   return Column(
-                    // mainAxisSize: MainAxisSize.min,
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       CredentialsDrawerItem(
                         selected: index == 3,
