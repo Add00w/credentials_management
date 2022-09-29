@@ -21,8 +21,6 @@
 .project
 .settings/
 .vscode/
-# config folder
-config/app_config.json
 # Flutter repo-specific
 /bin/cache/
 /bin/internal/bootstrap.bat
@@ -55,8 +53,6 @@ analysis_benchmark.json
 .pub-cache/
 .pub/
 /build/
-# config folder
-/assets/config/
 
 
 # Web related
@@ -139,7 +135,6 @@ GeneratedPluginRegistrant.java
 Icon?
 **/Pods/
 **/.symlinks/
-profile
 xcuserdata
 **/.generated/
 Flutter/App.framework
