@@ -6,11 +6,11 @@ import '../../auth/bloc/auth_bloc.dart';
 import '../main_cubit.dart';
 
 class CredentialsDrawer extends StatelessWidget {
-  const CredentialsDrawer({Key? key}) : super(key: key);
+  const CredentialsDrawer({super.key});
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
+      child: ColoredBox(
         color: const Color(0xff2b2d42),
         child: Padding(
           padding: const EdgeInsets.only(left: 32.0),

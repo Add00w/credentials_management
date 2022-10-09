@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DrawerIcon extends StatefulWidget {
-  const DrawerIcon({Key? key}) : super(key: key);
+  const DrawerIcon({super.key});
 
   @override
   State<DrawerIcon> createState() => _DrawerIconState();

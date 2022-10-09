@@ -8,13 +8,13 @@ class AppTextField extends StatefulWidget {
   final bool isPassword;
 
   const AppTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hint,
     required this.validator,
     this.keyboard = TextInputType.text,
     this.isPassword = false,
-  }) : super(key: key);
+  });
   @override
   AppTextFieldState createState() => AppTextFieldState();
 }

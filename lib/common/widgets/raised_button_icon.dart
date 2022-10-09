@@ -5,11 +5,11 @@ class RaisedButtonIcon extends StatelessWidget {
   final IconData icon;
   final String label;
   const RaisedButtonIcon({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.icon,
     required this.label,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(

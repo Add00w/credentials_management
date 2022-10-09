@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../main/main_cubit.dart';
 
 class NoCrededentialsWidget extends StatelessWidget {
-  const NoCrededentialsWidget({Key? key}) : super(key: key);
+  const NoCrededentialsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

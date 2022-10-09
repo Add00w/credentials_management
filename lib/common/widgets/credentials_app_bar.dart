@@ -6,8 +6,8 @@ import '../../features/main/widgets/drawer_icon.dart';
 
 class CredentialsAppBar extends StatelessWidget {
   const CredentialsAppBar({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainScreenCubit, int>(

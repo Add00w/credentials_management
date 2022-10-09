@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class CredentialsDrawerItem extends StatelessWidget {
   const CredentialsDrawerItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.onTap,
     required this.selected,
-  }) : super(key: key);
+  });
   final IconData icon;
   final String title;
   final bool selected;

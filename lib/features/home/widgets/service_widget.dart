@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class ServicesWidget extends StatelessWidget {
   const ServicesWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     required this.icon,
-  }) : super(key: key);
+  });
   final String title;
   final String description;
   final IconData icon;

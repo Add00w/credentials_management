@@ -3,7 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../features/credentials/repository/credentials_repository.dart';
 
 class ConnectivityService {
-  static late final Connectivity _connectivity = Connectivity();
+  static final Connectivity _connectivity = Connectivity();
 
   final _connectivitySubscription = _connectivity.onConnectivityChanged
       .listen(CredentialsRepository.syncTheData);

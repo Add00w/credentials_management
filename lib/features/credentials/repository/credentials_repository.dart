@@ -12,7 +12,7 @@ import '../model/credentials.dart';
 
 class CredentialsRepository {
   static late Box<Credentials> encryptedCredentialsBox;
-  static late final _credentialsFirestore =
+  static final _credentialsFirestore =
       FirebaseFirestore.instance.collection('credentials');
   CredentialsRepository(
     this._secureStorage,

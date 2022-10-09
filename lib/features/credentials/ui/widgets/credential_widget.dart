@@ -7,9 +7,9 @@ class CredentialWidget extends StatelessWidget {
   final Credentials credential;
 
   const CredentialWidget({
-    Key? key,
+    super.key,
     required this.credential,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -65,9 +65,9 @@ class CredentialWidget extends StatelessWidget {
 
 class PasswordWidget extends StatelessWidget {
   const PasswordWidget({
-    Key? key,
+    super.key,
     required this.password,
-  }) : super(key: key);
+  });
 
   final String password;
 
