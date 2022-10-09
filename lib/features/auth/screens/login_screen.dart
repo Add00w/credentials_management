@@ -2,10 +2,11 @@ import 'package:credentials_management/common/widgets/raised_button_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../common/constants/assets_constants.dart' as assets;
 import '../bloc/login_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class LoginScreen extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const FlutterLogo(size: 64),
+                  Image.asset(assets.logo),
                   const SizedBox(
                     height: 46,
                   ),

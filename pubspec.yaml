@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
 
   flutter_bloc: ^8.1.1
-  lint: ^1.5.3
   equatable: ^2.0.5
   flutter_secure_storage: ^5.0.2
   hive: ^2.0.0
@@ -31,8 +30,16 @@ dev_dependencies:
     sdk: flutter
   hive_generator: ^1.0.0
   build_runner:
+  flutter_launcher_icons: ^0.10.0
+  lint: ^1.10.0
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/credentials-logo.png"
 
 flutter:
 
   uses-material-design: true
+  assets:
+   - assets/
 
