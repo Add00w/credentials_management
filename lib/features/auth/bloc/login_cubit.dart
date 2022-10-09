@@ -15,10 +15,7 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> loginWithGoogle() async {
     emit(LoginIsInProgress());
     try {
-      final userCredential = await userRepository.signInWithGoogle();
-      if (userCredential == null) {
-        emit(LoginFailed(message: 'Sign in process is aborted'));
-      }
+      await userRepository.signInWithGoogle();
     } on Exception catch (error) {
       emit(LoginFailed(message: error.toString()));
     }
