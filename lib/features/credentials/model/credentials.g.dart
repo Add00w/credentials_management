@@ -20,6 +20,7 @@ class CredentialsAdapter extends TypeAdapter<Credentials> {
       fields[0] as String,
       fields[1] as String,
       fields[3] as String,
+      id: fields[7] as String?,
       icon: fields[4] as String?,
       synced: fields[6] == null ? false : fields[6] as bool,
     );
@@ -28,7 +29,7 @@ class CredentialsAdapter extends TypeAdapter<Credentials> {
   @override
   void write(BinaryWriter writer, Credentials obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.brand)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class CredentialsAdapter extends TypeAdapter<Credentials> {
       ..writeByte(4)
       ..write(obj.icon)
       ..writeByte(6)
-      ..write(obj.synced);
+      ..write(obj.synced)
+      ..writeByte(7)
+      ..write(obj.id);
   }
 
   @override

@@ -22,6 +22,21 @@ class CredentialsAdded extends CredentialsState {
   List<Object?> get props => [];
 }
 
+class CredentialsEdited extends CredentialsState {
+  @override
+  List<Object?> get props => [];
+}
+
+class CredentialsEditInProgress extends CredentialsState {
+  @override
+  List<Object?> get props => [];
+}
+
+class CredentialsDeleteInProgress extends CredentialsState {
+  @override
+  List<Object?> get props => [];
+}
+
 class AddCredentialInProgress extends CredentialsState {
   @override
   List<Object?> get props => [];

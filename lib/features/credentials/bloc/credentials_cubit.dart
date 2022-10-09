@@ -19,6 +19,32 @@ class CredentialsCubit extends Cubit<CredentialsState> {
     });
   }
 
+  void delete(String id, int index) {
+    final credentials = (state as CredentialsLoaded).credentials;
+    emit(CredentialsDeleteInProgress());
+    try {
+      credentialsRepository.delete(index, id).then((_) {
+        credentials.removeAt(index);
+        emit(CredentialsLoaded(credentials));
+      });
+    } catch (e) {
+      log('error:$e');
+    }
+  }
+
+  void edit(String id, int index, Credentials crdential) {
+    emit(CredentialsEditInProgress());
+    try {
+      credentialsRepository.edit(crdential, index, id).then(
+        (_) {
+          emit(CredentialsEdited());
+        },
+      );
+    } catch (e) {
+      log('error:$e');
+    }
+  }
+
   void getCredentials() {
     if (state is! CredentialsLoaded) {
       emit(CredentialsLoading());

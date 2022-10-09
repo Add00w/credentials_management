@@ -37,6 +37,7 @@ class CredentialsRepository {
           (doc) {
             // Set synced
             credential.synced = true;
+            credential.id = doc.id;
           },
         );
       } on Exception catch (e) {
@@ -46,12 +47,28 @@ class CredentialsRepository {
     return encryptedCredentialsBox.add(credential);
   }
 
-  Future<void> edit(Credentials credential, int index) async {
-    return encryptedCredentialsBox.putAt(index, credential);
+  Future<void> edit(Credentials credential, int index, String id) async {
+    try {
+      final data = {
+        'brand': credential.brand,
+        'icon': credential.icon,
+        'password': credential.password,
+        'username_or_email': credential.userNameOrEmail,
+      };
+      await encryptedCredentialsBox.putAt(index, credential);
+      await _credentialsFirestore.doc(id).update(data);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
-  Future<void> delete(int index) async {
-    return encryptedCredentialsBox.deleteAt(index);
+  Future<void> delete(int index, String id) async {
+    try {
+      await encryptedCredentialsBox.deleteAt(index);
+      await _credentialsFirestore.doc(id).delete();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Future<List<Credentials>> getCredentials() async {
@@ -62,11 +79,11 @@ class CredentialsRepository {
       await _credentialsFirestore.get().then(
         (event) async {
           for (final doc in event.docs) {
-            debugPrint("${doc.id} => ${doc.data()}");
             final credential = Credentials(
               doc.data()['brand'] as String,
               doc.data()['username_or_email'] as String,
               doc.data()['password'] as String,
+              id: doc.id,
               icon: doc.data()['icon'] as String,
               synced: true,
             );
@@ -94,6 +111,7 @@ class CredentialsRepository {
               (doc) async {
                 // Set synced
                 credential.synced = true;
+                credential.id = doc.id;
                 await credential.save();
               },
             );

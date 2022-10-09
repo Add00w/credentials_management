@@ -8,6 +8,7 @@ class Credentials extends HiveObject {
     this.brand,
     this.userNameOrEmail,
     this.password, {
+    this.id,
     this.icon,
     this.synced = false,
   });
@@ -27,4 +28,7 @@ class Credentials extends HiveObject {
 
   @HiveField(6, defaultValue: false)
   bool synced;
+
+  @HiveField(7)
+  String? id;
 }
