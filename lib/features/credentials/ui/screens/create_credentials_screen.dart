@@ -87,7 +87,7 @@ class _CreateCredentialsScreenState extends State<CreateCredentialsScreen> {
                   listener: (context, state) {
                     // if added successfully navigated to crdentials page
                     if (state is CredentialsAdded) {
-                      context.read<MainScreenCubit>().onChangeDrawerTab(1);
+                      context.read<MainScreenCubit>().onChangeDrawerTab(3);
                     }
                   },
                 )

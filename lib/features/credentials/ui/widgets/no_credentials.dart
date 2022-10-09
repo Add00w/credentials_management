@@ -17,7 +17,7 @@ class NoCrededentialsWidget extends StatelessWidget {
           IconButton(
             tooltip: 'Click here to add one',
             onPressed: () {
-              context.read<MainScreenCubit>().onChangeDrawerTab(5);
+              context.read<MainScreenCubit>().onChangeDrawerTab(1);
             },
             icon: const Icon(Icons.enhanced_encryption_rounded),
           ),
