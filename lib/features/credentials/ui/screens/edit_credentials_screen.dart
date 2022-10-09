@@ -52,6 +52,7 @@ class _EditCredentialsScreenState extends State<EditCredentialsScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        title: const Text('Edit Credentials'),
         elevation: 0.0,
         backgroundColor: const Color(0xff2b2d42),
       ),
