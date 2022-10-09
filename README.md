@@ -4,11 +4,14 @@ App for managing your credentials in one place.
 
 ## Description
 
+- Feature based architecture
 - Firebase for storing credentials on the cloud.
 - Google login
 - Hive for offline storage
 - connectivity_plus for listening and checking the network
 - Storing the credentials in local when the user is offline and syncing with the cloud data when becomes online again.
+- Dismiss to delete
+- Bloc state management
 #### Screenshots
 
 <div style="text-align: center">
@@ -82,6 +85,23 @@ App for managing your credentials in one place.
     </a>
    Profile
   </td>
+</tr>
+
+<tr>
+ <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Delete and Edit" src="assets/delete_edit.png" />
+    </a>
+   Delete and Edit
+  </td>
+
+   <td style="text-align: center, width: 180">
+   <a href="#">
+    <img alt="Edit Screen" src="assets/edit_screen.png" />
+    </a>
+  Edit Screen
+  </td>
+
 </tr>
 
 </table>
